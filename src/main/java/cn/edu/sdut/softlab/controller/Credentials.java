@@ -15,7 +15,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.edu.sdut.softlab.controller;
 
 import java.math.BigInteger;
@@ -29,23 +28,23 @@ import javax.inject.Named;
 @Default
 public class Credentials {
 
-	private BigInteger NO;
-	private String password;
+    private BigInteger NO;
+    private String password;
 
-	public BigInteger getNO() {
-		return NO;
-	}
+    public BigInteger getNO() {
+        return NO;
+    }
 
-	public void setNO(BigInteger no) {
-		this.NO = no;
-	}
+    public void setNO(BigInteger no) {
+        this.NO = no;
+    }
 
-	public String getPassword() {
-		return password;
-	}
+    public String getPassword() {
+        return password;
+    }
 
-	public void setPassword(String password) {
-		this.password = password;
-	}
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
 }

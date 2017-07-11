@@ -4,96 +4,96 @@ import java.io.Serializable;
 import javax.persistence.*;
 import java.util.Date;
 
-
 /**
  * The persistent class for the information database table.
- * 
+ *
  */
 @Entity
-@Table(name="information")
-@NamedQuery(name="Information.findAll", query="SELECT i FROM Information i")
+@Table(name = "information")
+@NamedQuery(name = "Information.findAll", query = "SELECT i FROM Information i")
 public class Information implements Serializable {
-	private static final long serialVersionUID = 1L;
 
-	@Id
-	@SequenceGenerator(name="INFORMATION_ID_GENERATOR" )
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="INFORMATION_ID_GENERATOR")
-	private int id;
+    private static final long serialVersionUID = 1L;
 
-	@Lob
-	private String content;
+    @Id
+    @SequenceGenerator(name = "INFORMATION_ID_GENERATOR")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "INFORMATION_ID_GENERATOR")
+    private int id;
 
-	private String level;
+    @Lob
+    private String content;
 
-	private String status;
+    private String level;
 
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date time;
+    private String status;
 
-	@Lob
-	private String title;
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date time;
 
-	//bi-directional many-to-one association to Student
-	@ManyToOne
-	private Student student;
+    @Lob
+    private String title;
 
-	public Information() {
-	}
+    //bi-directional many-to-one association to Student
+    @ManyToOne
+    private Student student;
 
-	public int getId() {
-		return this.id;
-	}
+    public Information() {
+    }
 
-	public void setId(int id) {
-		this.id = id;
-	}
+    public int getId() {
+        return this.id;
+    }
 
-	public String getContent() {
-		return this.content;
-	}
+    public void setId(int id) {
+        this.id = id;
+    }
 
-	public void setContent(String content) {
-		this.content = content;
-	}
+    public String getContent() {
+        return this.content;
+    }
 
-	public String getLevel() {
-		return this.level;
-	}
+    public void setContent(String content) {
+        this.content = content;
+    }
 
-	public void setLevel(String level) {
-		this.level = level;
-	}
+    public String getLevel() {
+        return this.level;
+    }
 
-	public String getStatus() {
-		return this.status;
-	}
+    public void setLevel(String level) {
+        this.level = level;
+    }
 
-	public void setStatus(String status) {
-		this.status = status;
-	}
+    public String getStatus() {
+        return this.status;
+    }
 
-	public Date getTime() {
-		return this.time;
-	}
+    public void setStatus(String status) {
+        this.status = status;
+    }
 
-	public void setTime(Date time) {
-		this.time = time;
-	}
+    public Date getTime() {
+        return this.time;
+    }
 
-	public String getTitle() {
-		return this.title;
-	}
+    public void setTime(Date time) {
+        this.time = time;
+    }
 
-	public void setTitle(String title) {
-		this.title = title;
-	}
+    public String getTitle() {
+        return this.title;
+    }
 
-	public Student getStudent() {
-		return this.student;
-	}
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
-	public void setStudent(Student student) {
-		this.student = student;
-	}
+    public Student getStudent() {
+        return this.student;
+    }
+
+    public void setStudent(Student student) {
+        this.student = student;
+    }
 
 }

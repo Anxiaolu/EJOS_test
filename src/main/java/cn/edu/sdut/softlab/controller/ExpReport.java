@@ -37,77 +37,76 @@ import cn.edu.sdut.softlab.entity.*;
 @Named("expReport")
 @Default
 public class ExpReport {
-	@Inject
-	FacesContext facesContext;
 
-	@Inject
-	private transient Logger logger;
+    @Inject
+    FacesContext facesContext;
 
-	private String className;// 文件名
-	private String result;// 返回值
-	private String filePath;// 文件保存的路径
-	private String answerText;// 代码(答案)
+    @Inject
+    private transient Logger logger;
 
+    private String className;// 文件名
+    private String result;// 返回值
+    private String filePath;// 文件保存的路径
+    private String answerText;// 代码(答案)
 
+    private ItemBank question;// 当前题目
 
-	private ItemBank question;// 当前题目
+    // 注入受管bean
+    @SessionScoped
+    @ManagedProperty(value = "#{login.currentUser}")
+    private Student currentUser;// 当前用户
 
-	// 注入受管bean
-	@SessionScoped
-	@ManagedProperty(value = "#{login.currentUser}")
-	private Student currentUser;// 当前用户
+    public ItemBank getQuestion() {
+        return question;
+    }
 
-	public ItemBank getQuestion() {
-		return question;
-	}
+    public void setQuestion(ItemBank question) {
+        this.question = question;
+    }
 
-	public void setQuestion(ItemBank question) {
-		this.question = question;
-	}
+    public String getClassName() {
+        // 临时变量
+        String classStr = answerText.substring(answerText.indexOf("public class"), answerText.indexOf("{")).toString();// 获取类名字符串
+        String[] classStrArray = classStr.split("\\s{1,}");// 按空格分开
+        if (classStrArray.length != 3) {
+            //req.setAttribute("msg", "编译失败：格式不符合规范，请检查类名是否正确(如：public class YouClassName{})");
 
-	public String getClassName() {
-		// 临时变量
-		String classStr = answerText.substring(answerText.indexOf("public class"), answerText.indexOf("{")).toString();// 获取类名字符串
-		String[] classStrArray = classStr.split("\\s{1,}");// 按空格分开
-		if (classStrArray.length != 3) {
-			//req.setAttribute("msg", "编译失败：格式不符合规范，请检查类名是否正确(如：public class YouClassName{})");
+            facesContext.addMessage(null, new FacesMessage("编译失败：格式不符合规范，请检查类名是否正确 !(如：public class ClassName{}) 错误来源=>" + classStrArray.toString()));
 
-			facesContext.addMessage(null, new FacesMessage("编译失败：格式不符合规范，请检查类名是否正确 !(如：public class ClassName{}) 错误来源=>" + classStrArray.toString()));
-			
-		} else {
-			className = classStrArray[classStrArray.length - 1];
+        } else {
+            className = classStrArray[classStrArray.length - 1];
 
-		}
+        }
 
-		return className;
-	}
+        return className;
+    }
 
-	public void setClassName(String className) {
-		this.className = className;
-	}
+    public void setClassName(String className) {
+        this.className = className;
+    }
 
-	public String getAnswerText() {
-		return answerText;
-	}
+    public String getAnswerText() {
+        return answerText;
+    }
 
-	public void setAnswerText(String answerText) {
-		this.answerText = answerText;
-	}
+    public void setAnswerText(String answerText) {
+        this.answerText = answerText;
+    }
 
-	public String getResult() {
-		return result;
-	}
+    public String getResult() {
+        return result;
+    }
 
-	public void setResult(String result) {
-		this.result = result;
-	}
+    public void setResult(String result) {
+        this.result = result;
+    }
 
-	public String getFilePath() {
-		return filePath;
-	}
+    public String getFilePath() {
+        return filePath;
+    }
 
-	public void setFilePath(String filePath) {
-		this.filePath = filePath;
-	}
+    public void setFilePath(String filePath) {
+        this.filePath = filePath;
+    }
 
 }
