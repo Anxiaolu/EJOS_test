@@ -6,6 +6,8 @@
 package cn.edu.sdut.softlab.service;
 
 import cn.edu.sdut.softlab.entity.Team;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  *
@@ -17,4 +19,15 @@ public class TeamFacade extends AbstractFacade<Team> {
         super(Team.class);
     }
 
+    public Team findByName(String name) {
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("name", name);
+        return findSingleByNamedQuery("Team.findByName", parameters, Team.class).get();
+    }
+    
+    public Team findById(Integer id) {
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("id", id);
+        return findSingleByNamedQuery("Team.findById", parameters, Team.class).get();
+    }
 }

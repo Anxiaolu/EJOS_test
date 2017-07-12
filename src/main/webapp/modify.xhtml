@@ -5,8 +5,7 @@
       xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:p="http://primefaces.org/ui"
       xmlns:fn="http://java.sun.com/jsp/jstl/functions">
-    <f:view>
-        <f:event type="preRenderView" listener="#{login.checkLogin}" />
+    
         <h:head>
             <meta charset="utf-8"/>
             <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
@@ -123,7 +122,7 @@
                         <h1 class="page-header">Dashboard</h1>
                     </div>  
                 </div><!--/.row-->
-                
+
                 <h:form id="form">
                     <p:growl id="msgs" showDetail="true"/>
                     <h:messages/>
@@ -138,21 +137,35 @@
                         <p:column headerText="ID" rendered="false">
                             <p:cellEditor>
                                 <f:facet name="output"><h:outputText value="#{stu.id}" /></f:facet>
-                                <f:facet name="input"><p:inputText id="modelInput" value="#{stu.id}" style="width:100%"/></f:facet>
+                                <f:facet name="input"><p:inputText id="modelInput" value="#{studentcontroller.currentstu.id = stu.id}" style="width:100%"/></f:facet>
                             </p:cellEditor>
                         </p:column>
                         
+                        <p:column headerText="StudentNum">
+                            <p:cellEditor>
+                                <f:facet name="output"><h:outputText value="#{stu.studentNum}" /></f:facet>
+                                <f:facet name="input"><p:inputText value="#{studentcontroller.currentstu.studentNum}" style="width:100%"/></f:facet>
+                            </p:cellEditor>
+                        </p:column>
+                        
+                        <p:column headerText="IdCard">
+                            <p:cellEditor>
+                                <f:facet name="output"><h:outputText value="#{stu.idCard}" /></f:facet>
+                                <f:facet name="input"><p:inputText value="#{studentcontroller.currentstu.idCard}" style="width:100%"/></f:facet>
+                            </p:cellEditor>
+                        </p:column>
+
                         <p:column headerText="Name">
                             <p:cellEditor>
                                 <f:facet name="output"><h:outputText value="#{stu.name}" /></f:facet>
-                                <f:facet name="input"><p:inputText value="#{stu.name}" style="width:100%" label="Name"/></f:facet>
+                                <f:facet name="input"><p:inputText value="#{studentcontroller.currentstu.name}" style="width:100%"/></f:facet>
                             </p:cellEditor>
                         </p:column>
-                        
+
                         <p:column headerText="Password">
                             <p:cellEditor>
                                 <f:facet name="output"><h:outputText value="#{stu.password}" /></f:facet>
-                                <f:facet name="input"><p:inputText value="#{stu.password}" style="width:100%"/></f:facet>
+                                <f:facet name="input"><p:inputText value="#{studentcontroller.currentstu.password}" style="width:100%"/></f:facet>
                             </p:cellEditor>
                         </p:column>
 
@@ -160,7 +173,8 @@
                             <p:cellEditor>
                                 <f:facet name="output"><h:outputText value="#{stu.team.name}" /></f:facet>
                                 <f:facet name="input">
-                                    <h:selectOneMenu value="#{stu.team.name}" style="width:100%">
+                                    <h:selectOneMenu value="#{studentcontroller.currentstu.team.id}" converter="#{teamConverter}"
+                                                     required="true" style="width:100%">
                                         <f:selectItems value="#{teamController.all}" var="team" itemLabel="#{team.name}" itemValue="#{team.id}" />
                                     </h:selectOneMenu>
                                 </f:facet>
@@ -204,5 +218,4 @@
                 })
             </script>
         </h:body>
-    </f:view>
 </html>

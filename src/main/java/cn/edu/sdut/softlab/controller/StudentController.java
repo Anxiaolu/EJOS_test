@@ -6,10 +6,10 @@
 package cn.edu.sdut.softlab.controller;
 
 import cn.edu.sdut.softlab.entity.Student;
+import cn.edu.sdut.softlab.entity.Team;
 import cn.edu.sdut.softlab.service.StudentFacade;
 import java.util.List;
 import java.util.logging.Logger;
-import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
@@ -39,6 +39,16 @@ public class StudentController {
 
     @Inject
     StudentFacade studentSerivce;
+    
+    private Student currentstu = new Student(new Team(1));
+
+    public Student getCurrentstu(){
+        return currentstu;
+    }
+
+    public void setCurrentstu(Student currentstu) {
+        this.currentstu = currentstu;
+    }
 
     public List<Student> getAll() throws Exception {
         try {
@@ -53,15 +63,18 @@ public class StudentController {
 
     public void onRowEdit(RowEditEvent event) throws Exception {
         Student editStudent = (Student) event.getObject();
-        editStudent.setName("gaosan");
-        logger.info("Student Edit!~~~~~~~~~~~~~~~~~~~~" + editStudent.getId() + "Name:" + editStudent.getName());
+        currentstu.setId(editStudent.getId());
+        logger.info("Student Edit!~~~~~~~~~~~~~~~~~~~~" + editStudent.toString());
+        logger.info("current information:    " + currentstu.toString());
         try {
             utx.begin();
-            em.merge(editStudent);
+            em.merge(currentstu);
         } finally {
             utx.commit();
             FacesMessage fms = new FacesMessage("Student modify", event.getObject().getClass().getName());
             FacesContext.getCurrentInstance().addMessage(null, fms);
+            currentstu = null;
+            event = null;
         }
     }
 
