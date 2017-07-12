@@ -12,13 +12,10 @@ import java.util.Set;
 @Entity
 @Table(name = "student")
 @NamedQueries({
-    @NamedQuery(name = "Student.findAll", query = "SELECT s FROM Student s")
-    ,
-	  @NamedQuery(name = "Student.findByStuNO", query = "SELECT s FROM Student s WHERE s.studentNum = :stuNO")
-    ,
-	  @NamedQuery(name = "Student.findByStuNOAndPassword", query = "SELECT s FROM Student s WHERE s.studentNum = :stuNO and s.password = :password")
-    ,
-	  @NamedQuery(name = "Student.findById", query = "SELECT s FROM Student s WHERE s.id = :id")})
+    @NamedQuery(name = "Student.findAll", query = "SELECT s FROM Student s"),
+    @NamedQuery(name = "Student.findByStuNO", query = "SELECT s FROM Student s WHERE s.studentNum = :stuNO"),
+    @NamedQuery(name = "Student.findByStuNOAndPassword", query = "SELECT s FROM Student s WHERE s.studentNum = :stuNO and s.password = :password"),
+    @NamedQuery(name = "Student.findById", query = "SELECT s FROM Student s WHERE s.id = :id")})
 public class Student implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -217,9 +214,9 @@ public class Student implements Serializable {
 
     @Override
     public String toString() {
-        return "Student{" + "id=" + id + ", idCard=" + idCard + ", name=" + name + ", password=" + password + 
-                ", studentNum=" + studentNum + ", achievements=" + achievements + ", informations=" + 
-                informations + ", team=" + team + '}';
+        return "Student{" + "id=" + id + ", idCard=" + idCard + ", name=" + name + ", password=" + password
+                + ", studentNum=" + studentNum + ", achievements=" + achievements + ", informations="
+                + informations + ", team=" + team + '}';
     }
 
 }

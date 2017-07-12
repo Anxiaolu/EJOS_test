@@ -37,7 +37,7 @@ public class Teacher implements Serializable {
 	private BigInteger tel;
 
 	//bi-directional many-to-one association to Team
-	@OneToMany(mappedBy="teacher", fetch=FetchType.EAGER)
+	@OneToMany(mappedBy="teacher", fetch=FetchType.LAZY)
 	private Set<Team> teams;
 
 	public Teacher() {

@@ -32,11 +32,11 @@ public class Team implements Serializable {
     private String name;
 
     //bi-directional many-to-one association to ItemBank
-    @OneToMany(mappedBy = "team", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "team", fetch = FetchType.LAZY)
     private Set<ItemBank> itemBanks;
 
     //bi-directional many-to-one association to Student
-    @OneToMany(mappedBy = "team", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "team", fetch = FetchType.LAZY)
     private Set<Student> students;
 
     //bi-directional many-to-one association to Teacher

@@ -5,97 +5,99 @@ import javax.persistence.*;
 
 /**
  * The persistent class for the achievements database table.
- * 
+ *
  */
 @Entity
-@Table(name="achievements")
+@Table(name = "achievements")
 @NamedQueries({
-	  @NamedQuery(name="Achievement.findAll", query="SELECT a FROM Achievement a"),
+    @NamedQuery(name = "Achievement.findAll", query = "SELECT a FROM Achievement a")
+    ,
 	  @NamedQuery(name = "Achievement.findById", query = "SELECT a FROM Achievement a WHERE a.id = :id")})
 public class Achievement implements Serializable {
-	private static final long serialVersionUID = 1L;
 
-	@Id
-	@SequenceGenerator(name="ACHIEVEMENTS_ID_GENERATOR" )
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="ACHIEVEMENTS_ID_GENERATOR")
-	private int id;
+    private static final long serialVersionUID = 1L;
 
-	@Lob
-	private String answer;
+    @Id
+    @SequenceGenerator(name = "ACHIEVEMENTS_ID_GENERATOR")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ACHIEVEMENTS_ID_GENERATOR")
+    private int id;
 
-	@Column(name="answer_path")
-	private String answerPath;
+    @Lob
+    private String answer;
 
-	private String result;
+    @Column(name = "answer_path")
+    private String answerPath;
 
-	private int score;
+    private String result;
 
-	//bi-directional many-to-one association to ItemBank
-	@ManyToOne
-	@JoinColumn(name="question_id")
-	private ItemBank itemBank;
+    private int score;
 
-	//bi-directional many-to-one association to Student
-	@ManyToOne
-	private Student student;
+    //bi-directional many-to-one association to ItemBank
+    @ManyToOne
+    @JoinColumn(name = "question_id")
+    private ItemBank itemBank;
 
-	public Achievement() {
-	}
+    //bi-directional many-to-one association to Student
+    @ManyToOne
+    private Student student;
 
-	public int getId() {
-		return this.id;
-	}
+    public Achievement() {
+    }
 
-	public void setId(int id) {
-		this.id = id;
-	}
+    public int getId() {
+        return this.id;
+    }
 
-	public String getAnswer() {
-		return this.answer;
-	}
+    public void setId(int id) {
+        this.id = id;
+    }
 
-	public void setAnswer(String answer) {
-		this.answer = answer;
-	}
+    public String getAnswer() {
+        return this.answer;
+    }
 
-	public String getAnswerPath() {
-		return this.answerPath;
-	}
+    public void setAnswer(String answer) {
+        this.answer = answer;
+    }
 
-	public void setAnswerPath(String answerPath) {
-		this.answerPath = answerPath;
-	}
+    public String getAnswerPath() {
+        return this.answerPath;
+    }
 
-	public String getResult() {
-		return this.result;
-	}
+    public void setAnswerPath(String answerPath) {
+        this.answerPath = answerPath;
+    }
 
-	public void setResult(String result) {
-		this.result = result;
-	}
+    public String getResult() {
+        return this.result;
+    }
 
-	public int getScore() {
-		return this.score;
-	}
+    public void setResult(String result) {
+        this.result = result;
+    }
 
-	public void setScore(int score) {
-		this.score = score;
-	}
+    public int getScore() {
+        return this.score;
+    }
 
-	public ItemBank getItemBank() {
-		return this.itemBank;
-	}
+    public void setScore(int score) {
+        this.score = score;
+    }
 
-	public void setItemBank(ItemBank itemBank) {
-		this.itemBank = itemBank;
-	}
+    public ItemBank getItemBank() {
+        return this.itemBank;
+    }
 
-	public Student getStudent() {
-		return this.student;
-	}
+    public void setItemBank(ItemBank itemBank) {
+        this.itemBank = itemBank;
+    }
 
-	public void setStudent(Student student) {
-		this.student = student;
-	}
+    public Student getStudent() {
+        return this.student;
+    }
+
+    public void setStudent(Student student) {
+        this.student = student;
+    }
 
 }

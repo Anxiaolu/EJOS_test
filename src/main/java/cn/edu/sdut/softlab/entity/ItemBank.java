@@ -48,7 +48,7 @@ public class ItemBank implements Serializable {
 	private Date time;
 
 	//bi-directional many-to-one association to Achievement
-	@OneToMany(mappedBy="itemBank", fetch=FetchType.EAGER)
+	@OneToMany(mappedBy="itemBank", fetch=FetchType.LAZY)
 	private Set<Achievement> achievements;
 
 	//bi-directional many-to-one association to Team

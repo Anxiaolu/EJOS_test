@@ -11,7 +11,9 @@ import cn.edu.sdut.softlab.service.StudentFacade;
 import java.util.List;
 import java.util.logging.Logger;
 import javax.enterprise.context.RequestScoped;
+import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -25,7 +27,7 @@ import org.primefaces.event.RowEditEvent;
  * @author huanlu
  */
 @RequestScoped
-@Named("studentcontroller")
+@Named("stuController")
 public class StudentController {
     
     @Inject
@@ -39,6 +41,18 @@ public class StudentController {
 
     @Inject
     StudentFacade studentSerivce;
+    
+    @ManagedProperty(value = "#{login.currentUser}")
+    @SessionScoped
+    private Student loginStudent;
+
+    public Student getLoginStudent() {
+        return loginStudent;
+    }
+
+    public void setLoginStudent(Student loginStudent) {
+        this.loginStudent = loginStudent;
+    }   
     
     private Student currentstu = new Student(new Team(1));
 
@@ -81,7 +95,7 @@ public class StudentController {
     public void onRowCancel(RowEditEvent event) {
         FacesMessage msg = new FacesMessage("Edit Cancelled", ((Student) event.getObject()).getName());
         FacesContext.getCurrentInstance().addMessage(null, msg);
-        
+        currentstu = null;
     }
-
+    
 }
