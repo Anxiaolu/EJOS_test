@@ -46,14 +46,6 @@ public class StudentController {
     @SessionScoped
     private Student loginStudent;
 
-    public Student getLoginStudent() {
-        return loginStudent;
-    }
-
-    public void setLoginStudent(Student loginStudent) {
-        this.loginStudent = loginStudent;
-    }   
-    
     private Student currentstu = new Student(new Team(1));
 
     public Student getCurrentstu(){
@@ -96,6 +88,19 @@ public class StudentController {
         FacesMessage msg = new FacesMessage("Edit Cancelled", ((Student) event.getObject()).getName());
         FacesContext.getCurrentInstance().addMessage(null, msg);
         currentstu = null;
+    }
+    
+    public void modify() throws Exception{
+        System.out.print(loginStudent.toString());
+        currentstu.setStudentNum(loginStudent.getStudentNum());
+        try {
+            utx.begin();
+            em.merge(currentstu);
+            logger.info("Student Edit:" + currentstu.toString());
+        } finally{
+            currentstu = null;
+            utx.commit();
+        }
     }
     
 }

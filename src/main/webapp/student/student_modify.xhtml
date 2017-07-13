@@ -131,11 +131,13 @@
                 <div class="row">
                     <div class="col-xs-12 col-md-12 col-lg-12">
                         <h:messages/>
-                        <h:form role="#{stuController.loginStudent}">
-                            <p:cellEditor>
-                                <f:facet name="output"><h:outputText value="#{loginStudent.name}"/></f:facet>
-                                <f:facet name="input"><p:inputText value=""/></f:facet>
-                            </p:cellEditor>
+                        <h:form>
+                            <p:inputText value="#{stuController.currentstu.id = login.currentUser.id}" rendered="false"/>
+                            <p:inputText value="#{stuController.currentstu.studentNum = login.currentUser.studentNum}" rendered="false"/>
+                            <p:inputText value="#{stuController.currentstu.name}" placeholder="#{login.currentUser.name}"/><br/>
+                            <p:inputText value="#{stuController.currentstu.password}" placeholder="#{login.currentUser.password}"/><br/>
+                            <p:inputText value="#{stuController.currentstu.idCard}" placeholder="#{login.currentUser.idCard}"/><br/>
+                            <h:commandButton action="#{stuController.modify}" value="Modify"/>
                         </h:form>
                     </div>
                 </div>
