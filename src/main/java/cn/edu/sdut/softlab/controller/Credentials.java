@@ -30,6 +30,15 @@ public class Credentials {
 
     private BigInteger NO;
     private String password;
+    private String level;
+
+    public String getLevel() {
+        return level;
+    }
+
+    public void setLevel(String level) {
+        this.level = level;
+    }
 
     public BigInteger getNO() {
         return NO;

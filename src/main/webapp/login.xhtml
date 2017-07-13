@@ -67,6 +67,13 @@
                                                 value="#{credentials.password}" placeholder="Password..."
                                                 styleClass="form-password form-control" id="form-password" type="password"/>
                                         </div>
+                                        <div class="form-group">
+                                            <p:selectOneRadio id="customRadio" value="#{credentials.level}" layout="level">
+                                                <f:selectItem itemLabel="Admin" itemValue="1" />
+                                                <f:selectItem itemLabel="Teacher" itemValue="2" />
+                                                <f:selectItem itemLabel="Student" itemValue="3" />
+                                            </p:selectOneRadio>
+                                        </div>
                                     </h:panelGrid>
                                     <h:commandButton id="login" value="Login"
                                                      action="#{login.login}" rendered="#{!login.loggedIn}" 
@@ -78,15 +85,15 @@
                 </div>
             </div>
         </div>
-            <!-- Javascript -->
-            <script src="assets/js/jquery-1.11.1.min.js"></script>
-            <script src="assets/bootstrap/js/bootstrap.min.js"></script>
-            <script src="assets/js/jquery.backstretch.min.js"></script>
-            <script src="assets/js/scripts.js"></script>
+        <!-- Javascript -->
+        <script src="assets/js/jquery-1.11.1.min.js"></script>
+        <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+        <script src="assets/js/jquery.backstretch.min.js"></script>
+        <script src="assets/js/scripts.js"></script>
 
-            <!--[if lt IE 10]>
-                <script src="assets/js/placeholder.js"></script>
-            <![endif]-->
+        <!--[if lt IE 10]>
+            <script src="assets/js/placeholder.js"></script>
+        <![endif]-->
 
     </h:body>
 
