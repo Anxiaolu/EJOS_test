@@ -68,10 +68,10 @@
                                                 styleClass="form-password form-control" id="form-password" type="password"/>
                                         </div>
                                         <div class="form-group">
-                                            <p:selectOneRadio id="customRadio" value="#{credentials.level}" layout="level">
-                                                <f:selectItem itemLabel="Admin" itemValue="1" />
-                                                <f:selectItem itemLabel="Teacher" itemValue="2" />
-                                                <f:selectItem itemLabel="Student" itemValue="3" />
+                                            <p:selectOneRadio id="UserRadio" value="#{credentials.level}" required="true" requiredMessage="请选择你登录的身份">
+                                                <f:selectItem itemLabel="Admin" itemValue="Admin" />
+                                                <f:selectItem itemLabel="Teacher" itemValue="Teacher" />
+                                                <f:selectItem itemLabel="Student" itemValue="Student" />
                                             </p:selectOneRadio>
                                         </div>
                                     </h:panelGrid>

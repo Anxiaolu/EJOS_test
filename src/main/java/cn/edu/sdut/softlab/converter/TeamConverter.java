@@ -25,13 +25,9 @@ public class TeamConverter implements Converter, Serializable {
     @Inject
     TeamFacade teamService;
 
-    @Inject
-    FacesContext fc;
-
     @Override   
     public Object getAsObject(FacesContext context, UIComponent component, String value) {
         if (value != null && !value.equals("")) {
-            System.out.print(value);
             Team team = teamService.findByName(value);
             return team.getId();
         }

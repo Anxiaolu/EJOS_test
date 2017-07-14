@@ -27,21 +27,21 @@ import javax.persistence.PersistenceContext;
 
 public class Resources {
 
-	// Expose an entity manager using the resource producer pattern
-	@PersistenceContext
-	@Produces
-	private EntityManager em;
+    // Expose an entity manager using the resource producer pattern
+    @PersistenceContext
+    @Produces
+    private EntityManager em;
 
-	@Produces
-	Logger getLogger(InjectionPoint ip) {
-		String s = ip.getMember().getDeclaringClass().getName();
-		return Logger.getLogger(s);
-	}
+    @Produces
+    Logger getLogger(InjectionPoint ip) {
+        String s = ip.getMember().getDeclaringClass().getName();
+        return Logger.getLogger(s);
+    }
 
-	@Produces
-	@RequestScoped
-	FacesContext getFacesContextInstance() {
-		return FacesContext.getCurrentInstance();
-	}
+    @Produces
+    @RequestScoped
+    FacesContext getFacesContextInstance() {
+        return FacesContext.getCurrentInstance();
+    }
 
 }

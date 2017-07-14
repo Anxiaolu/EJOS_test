@@ -26,33 +26,27 @@ import javax.inject.Named;
 import cn.edu.sdut.softlab.entity.Teacher;
 
 /**
- * @author GaoYisheng 
- * 2017年5月18日
- * TODO
+ * @author GaoYisheng 2017年5月18日 TODO
  */
 @Stateless
 @Named("teacherfacade")
 public class TeacherFacade extends AbstractFacade<Teacher> {
 
-	
-	public TeacherFacade() {
-		super(Teacher.class);
-	}
-	/**
-	 * 2017-05-18
-	 * @param entityClass
-	 */
-	public TeacherFacade(Class<Teacher> entityClass) {
-		super(entityClass);
-		// TODO Auto-generated constructor stub
-	}
-	
-	
-	public Teacher findByTeaNO(BigInteger bigInteger) {
-		Map<String, Object> parameters = new HashMap<>(0);
-		parameters.put("teaNO", bigInteger);
-		return findSingleByNamedQuery("teacher.findByTeaNO", parameters, Teacher.class).get();
-	}
-	
+    public TeacherFacade() {
+        super(Teacher.class);
+    }
+
+    public Teacher findByTeaNO(BigInteger bigInteger) {
+        Map<String, Object> parameters = new HashMap<>(0);
+        parameters.put("teacherNO", bigInteger);
+        return findSingleByNamedQuery("teacher.findByTeaNO", parameters, Teacher.class).get();
+    }
+    
+    public Teacher findByTeacherNoAndPassword(BigInteger teacherNum, String password) {
+        Map<String, Object> parameters = new HashMap<>(0);
+        parameters.put("teaNO", teacherNum);
+        parameters.put("password", password);
+        return findSingleByNamedQuery("Teacher.findByTeaNOAndPassword", parameters, Teacher.class).get();
+    }
 
 }

@@ -1,6 +1,7 @@
 package cn.edu.sdut.softlab.entity;
 
 import java.io.Serializable;
+import javax.enterprise.inject.Alternative;
 import javax.persistence.*;
 
 
@@ -10,8 +11,13 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name="admin")
-@NamedQuery(name="Admin.findAll", query="SELECT a FROM Admin a")
-public class Admin implements Serializable {
+@Alternative
+@NamedQueries({@NamedQuery(name="Admin.findAll", query="SELECT a FROM Admin a"),
+                @NamedQuery(name = "Admin.findById",query = "SELECT a FROM Admin a WHERE a.id = :id"),
+                @NamedQuery(name = "Admin.findByIdAndPassword",query = "SELECT a FROM Admin a WHERE a.id = :id and a.password = :password"),
+                @NamedQuery(name = "Admin.findByNameAndPassword",query = "SELECT a FROM Admin a WHERE a.name = :name and a.password = :password")
+})
+public class Admin implements Serializable,Level{
 	private static final long serialVersionUID = 1L;
 
 	@Id

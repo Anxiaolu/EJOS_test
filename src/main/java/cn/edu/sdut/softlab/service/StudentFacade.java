@@ -23,7 +23,7 @@ import java.util.Map;
 import javax.ejb.Stateless;
 import javax.inject.Named;
 
-import cn.edu.sdut.softlab.entity.Student;;
+import cn.edu.sdut.softlab.entity.Student;
 
 /**
  * @author GaoYisheng 2017年5月10日 TODO
@@ -31,40 +31,29 @@ import cn.edu.sdut.softlab.entity.Student;;
 @Stateless
 @Named("studentfacade")
 public class StudentFacade extends AbstractFacade<Student> {
-	
-	public StudentFacade() {
-		super(Student.class);
-	}
 
-	/**
-	 * 2017-05-10
-	 * 
-	 * @param entityClass
-	 */
-//	public StudentFacade(Class<Student> entityClass) {
-//		super(entityClass);
-//		// TODO Auto-generated constructor stub
-//	}
+    public StudentFacade() {
+        super(Student.class);
+    }
 
-	public Student findByStuNO(String stuNO) {
-		Map<String, Object> parameters = new HashMap<>(0);
-		parameters.put("stuNO", stuNO);
-		return findSingleByNamedQuery("Student.findByStuNO", parameters, Student.class).get();
-	}
+    public Student findByStuId(Integer id) {
+        Map<String, Object> parameters = new HashMap<>(0);
+        parameters.put("id", id);
+        return findSingleByNamedQuery("Student.findById", parameters, Student.class).get();
+    }
 
-	/**
-	 * 2017-05-10
-	 * 
-	 * @param stuNO
-	 * @param password
-	 * @return
-	 */
-	public Student findByStuNOAndPassword(BigInteger stuNO, String password) {
-
-		Map<String, Object> parameters = new HashMap<>(0);
-		parameters.put("stuNO", stuNO);
-		parameters.put("password", password);
-		return findSingleByNamedQuery("Student.findByStuNOAndPassword", parameters, Student.class).get();
-	}
+    /**
+     * 2017-05-10
+     *
+     * @param stuNO
+     * @param password
+     * @return
+     */
+    public Student findByStuNOAndPassword(BigInteger stuNO, String password) {
+        Map<String, Object> parameters = new HashMap<>(0);
+        parameters.put("stuNO", stuNO);
+        parameters.put("password", password);
+        return findSingleByNamedQuery("Student.findByStuNOAndPassword", parameters, Student.class).get();
+    }
 
 }

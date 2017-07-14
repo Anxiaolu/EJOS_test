@@ -134,10 +134,11 @@
                         <h:form>
                             <p:inputText value="#{stuController.currentstu.id = login.currentUser.id}" rendered="false"/>
                             <p:inputText value="#{stuController.currentstu.studentNum = login.currentUser.studentNum}" rendered="false"/>
-                            <p:inputText value="#{stuController.currentstu.name}" placeholder="#{login.currentUser.name}"/><br/>
-                            <p:inputText value="#{stuController.currentstu.password}" placeholder="#{login.currentUser.password}"/><br/>
-                            <p:inputText value="#{stuController.currentstu.idCard}" placeholder="#{login.currentUser.idCard}"/><br/>
-                            <h:commandButton action="#{stuController.modify}" value="Modify"/>
+                            <p:inputText value="#{stuController.currentstu.name}" placeholder="#{login.currentUser.name}" required="true" requiredMessage="请输入要修改成的姓名"/><br/>
+                            <p:inputText value="#{stuController.currentstu.password}" placeholder="#{login.currentUser.password}" required="true" requiredMessage="请输入要修改的密码"/><br/>
+                            <p:inputText value="#{stuController.currentstu.idCard}" placeholder="#{login.currentUser.idCard}" required="true" requiredMessage="请输入要修噶的id信息"/><br/>
+                            <h:commandButton action="#{stuController.modify}" value="Modify">
+                            </h:commandButton>
                         </h:form>
                     </div>
                 </div>

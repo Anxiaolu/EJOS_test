@@ -3,9 +3,9 @@
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
-      xmlns:p="http://primefaces.org/ui"
-      xmlns:fn="http://java.sun.com/jsp/jstl/functions">
-    
+      xmlns:p="http://primefaces.org/ui">
+    <f:view>
+        <f:event type="preRenderView" listener="#{login.checkLogin}" />
         <h:head>
             <meta charset="utf-8"/>
             <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
@@ -33,8 +33,8 @@
                             <li class="dropdown pull-right">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-user"></span> #{login.currentUser.name} <span class="caret"></span></a>
                                 <ul class="dropdown-menu" role="menu">
-                                    <li><a href="#"><span class="glyphicon glyphicon-user"></span> Profile</a></li>
-                                    <li><a href="#"><span class="glyphicon glyphicon-cog"></span> Settings</a></li>
+                                    <li><a href="student/student_modify.jsf"><span class="glyphicon glyphicon-user"></span> Profile</a></li>
+                                    <li><a href="Stuff_modify.jsf"><span class="glyphicon glyphicon-cog"></span> Settings</a></li>
                                     <li style="padding-left: 20px;"><h:form><p:commandButton action="#{login.logout}" value="LogOut" styleClass="logout"><span class="glyphicon glyphicon-log-out"></span> </p:commandButton></h:form></li>
                                 </ul>
                             </li>
@@ -106,7 +106,7 @@
                         </ul>
                     </li>
                     <li role="presentation" class="divider"></li>
-                    <li><a href="index.jsf"><span class="glyphicon glyphicon-user"></span> Login Page</a></li>
+                    <li><a href="/login.jsf"><span class="glyphicon glyphicon-user"></span> Login Page</a></li>
                 </ul>
             </div><!--/.sidebar-->
 
@@ -117,82 +117,33 @@
                         <li class="active">Dashboard</li>
                     </ol>
                 </div><!--/.row-->
+                <h:messages/>
                 <div class="row">
                     <div class="col-lg-12">
                         <h1 class="page-header">Dashboard</h1>
                     </div>  
                 </div><!--/.row-->
-
-                <h:form id="form">
-                    <p:growl id="msgs" showDetail="true"/>
-                    <h:messages/>
-                    <p:dataTable id="dataTable" var="stu" value="#{stuController.all}" editable="true" style="margin-bottom:20px">
-                        <f:facet name="header">
-                            Row Editing
-                        </f:facet>
-
-                        <p:ajax event="rowEdit" listener="#{stuController.onRowEdit}" update=":form:msgs" />
-                        <p:ajax event="rowEditCancel" listener="#{stuController.onRowCancel}" update=":form:msgs" />
-
-                        <p:column headerText="ID" rendered="false">
-                            <p:cellEditor>
-                                <f:facet name="output"><h:outputText value="#{stu.id}" /></f:facet>
-                                <f:facet name="input"><p:inputText id="modelInput" value="#{stuController.currentstu.id = stu.id}" style="width:100%"/></f:facet>
-                            </p:cellEditor>
-                        </p:column>
-                        
-                        <p:column headerText="StudentNum">
-                            <p:cellEditor>
-                                <f:facet name="output"><h:outputText value="#{stu.studentNum}" /></f:facet>
-                                <f:facet name="input"><p:inputText value="#{stuController.currentstu.studentNum}" style="width:100%"/></f:facet>
-                            </p:cellEditor>
-                        </p:column>
-                        
-                        <p:column headerText="IdCard">
-                            <p:cellEditor>
-                                <f:facet name="output"><h:outputText value="#{stu.idCard}" /></f:facet>
-                                <f:facet name="input"><p:inputText value="#{stuController.currentstu.idCard}" style="width:100%"/></f:facet>
-                            </p:cellEditor>
-                        </p:column>
-
-                        <p:column headerText="Name">
-                            <p:cellEditor>
-                                <f:facet name="output"><h:outputText value="#{stu.name}" /></f:facet>
-                                <f:facet name="input"><p:inputText value="#{stuController.currentstu.name}" style="width:100%"/></f:facet>
-                            </p:cellEditor>
-                        </p:column>
-
-                        <p:column headerText="Password">
-                            <p:cellEditor>
-                                <f:facet name="output"><h:outputText value="#{stu.password}" /></f:facet>
-                                <f:facet name="input"><p:inputText value="#{stuController.currentstu.password}" style="width:100%"/></f:facet>
-                            </p:cellEditor>
-                        </p:column>
-
-                        <p:column headerText="Team">
-                            <p:cellEditor>
-                                <f:facet name="output"><h:outputText value="#{stu.team.name}" /></f:facet>
-                                <f:facet name="input">
-                                    <h:selectOneMenu value="#{stuController.currentstu.team.id}" converter="#{teamConverter}"
-                                                     required="true" style="width:100%">
-                                        <f:selectItems value="#{teamController.all}" var="team" itemLabel="#{team.name}" itemValue="#{team.id}" />
-                                    </h:selectOneMenu>
-                                </f:facet>
-                            </p:cellEditor>
-                        </p:column>
-
-                        <p:column style="width:32px">
-                            <p:rowEditor />
-                        </p:column>
-                        <f:facet name="footer">
-                            In total there are #{fn:length(stuController.all)} Items.
-                        </f:facet>
-                    </p:dataTable>
-                    <p:blockUI block="dataTable" trigger="dataTable">
-                        LOADING...<br />
-                        <p:graphicImage value="/assets/img/loading/loading.gif" />
-                    </p:blockUI>
-                </h:form>
+                <div class="row">
+                    <div class="col-xs-12 col-md-12 col-lg-12">
+                        <h:form>
+                            <h:panelGrid columns="2" cellpadding="10">
+                                <p:outputLabel for="basic" value="Basic:" /> 
+                                <p:themeSwitcher id="basic">
+                                    <f:selectItem itemLabel="Choose Theme" itemValue="" />
+                                    <f:selectItems value="#{settings.allMainTheme}" var="theme_main" itemLabel="#{theme_main}" itemValue="#{theme_main}"/>
+                                </p:themeSwitcher>
+                                <p:outputLabel for="advanced" value="Advanced:" /> 
+                                <p:themeSwitcher id="advanced" style="width:165px" effect="fade" var="t">
+                                    <f:selectItem itemLabel="Choose Theme" itemValue="" />
+                                    <f:selectItems value="[afterdark, afternoon, afterwork, aristo, black-tie, blitzer, bluesky, bootstrap, casablanca, cupertino, cruze, dark-hive, delta, dot-luv, eggplant, excite-bike, flick, glass-x, home, hot-sneaks, humanity, le-frog, midnight, mint-choc, omega, overcast, pepper-grinder, redmond, rocket, sam, smoothness, south-street, start, sunny, swanky-purse, trontastic, ui-darkness, ui-lightness, vader]" var="theme" itemLabel="#{theme}" itemValue="#{theme}" />
+                                    <p:column>
+                                        <h:outputText styleClass="ui-theme ui-theme-" style="display-block" />
+                                    </p:column>
+                                </p:themeSwitcher>
+                            </h:panelGrid>
+                        </h:form>
+                    </div>
+                </div>
             </div>	<!--/.main-->
             <script src="assets/js/jquery-1.11.1.min.js"></script>
             <script src="assets/bootstrap/js/bootstrap.min.js"></script>
@@ -218,4 +169,5 @@
                 })
             </script>
         </h:body>
+    </f:view>
 </html>

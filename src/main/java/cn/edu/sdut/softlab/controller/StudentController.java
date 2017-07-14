@@ -5,6 +5,7 @@
  */
 package cn.edu.sdut.softlab.controller;
 
+import cn.edu.sdut.softlab.entity.Level;
 import cn.edu.sdut.softlab.entity.Student;
 import cn.edu.sdut.softlab.entity.Team;
 import cn.edu.sdut.softlab.service.StudentFacade;
@@ -19,6 +20,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.servlet.http.HttpSession;
 import javax.transaction.UserTransaction;
 import org.primefaces.event.RowEditEvent;
 
@@ -91,7 +93,10 @@ public class StudentController {
     }
     
     public void modify() throws Exception{
-        System.out.print(loginStudent.toString());
+        //System.out.print(loginStudent.toString());
+        HttpSession session = (HttpSession) (FacesContext) FacesContext.getCurrentInstance().getExternalContext().getSession(true);
+        Student loginStudent = (Student) session.getAttribute("currentUser");
+        loginStudent.toString();
         currentstu.setStudentNum(loginStudent.getStudentNum());
         try {
             utx.begin();

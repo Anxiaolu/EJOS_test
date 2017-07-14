@@ -20,17 +20,19 @@ package cn.edu.sdut.softlab.controller;
 import java.math.BigInteger;
 
 import javax.enterprise.context.RequestScoped;
-import javax.enterprise.inject.Default;
 import javax.inject.Named;
 
 @RequestScoped
 @Named
-@Default
 public class Credentials {
 
     private BigInteger NO;
     private String password;
     private String level;
+
+    public BigInteger getNO() {
+        return NO;
+    }
 
     public String getLevel() {
         return level;
@@ -38,10 +40,6 @@ public class Credentials {
 
     public void setLevel(String level) {
         this.level = level;
-    }
-
-    public BigInteger getNO() {
-        return NO;
     }
 
     public void setNO(BigInteger no) {

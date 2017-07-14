@@ -4,6 +4,7 @@ import java.io.Serializable;
 import javax.persistence.*;
 import java.math.BigInteger;
 import java.util.Set;
+import javax.enterprise.inject.Alternative;
 
 /**
  * The persistent class for the student database table.
@@ -11,12 +12,13 @@ import java.util.Set;
  */
 @Entity
 @Table(name = "student")
+@Alternative
 @NamedQueries({
     @NamedQuery(name = "Student.findAll", query = "SELECT s FROM Student s"),
     @NamedQuery(name = "Student.findByStuNO", query = "SELECT s FROM Student s WHERE s.studentNum = :stuNO"),
     @NamedQuery(name = "Student.findByStuNOAndPassword", query = "SELECT s FROM Student s WHERE s.studentNum = :stuNO and s.password = :password"),
     @NamedQuery(name = "Student.findById", query = "SELECT s FROM Student s WHERE s.id = :id")})
-public class Student implements Serializable {
+public class Student implements Serializable,Level{
 
     private static final long serialVersionUID = 1L;
 
