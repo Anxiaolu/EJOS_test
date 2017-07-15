@@ -11,6 +11,8 @@ package cn.edu.sdut.softlab.entity;
  */
 public interface Level {
     
+    void setLevel();
+    
     String getPassword();
     
     String getName();

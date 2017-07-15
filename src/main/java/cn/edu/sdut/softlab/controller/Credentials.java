@@ -17,6 +17,7 @@
  */
 package cn.edu.sdut.softlab.controller;
 
+import cn.edu.sdut.softlab.qualifiers.LoggedIn;
 import java.math.BigInteger;
 
 import javax.enterprise.context.RequestScoped;

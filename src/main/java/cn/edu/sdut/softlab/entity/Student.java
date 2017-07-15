@@ -12,13 +12,15 @@ import javax.enterprise.inject.Alternative;
  */
 @Entity
 @Table(name = "student")
-@Alternative
 @NamedQueries({
-    @NamedQuery(name = "Student.findAll", query = "SELECT s FROM Student s"),
-    @NamedQuery(name = "Student.findByStuNO", query = "SELECT s FROM Student s WHERE s.studentNum = :stuNO"),
-    @NamedQuery(name = "Student.findByStuNOAndPassword", query = "SELECT s FROM Student s WHERE s.studentNum = :stuNO and s.password = :password"),
+    @NamedQuery(name = "Student.findAll", query = "SELECT s FROM Student s")
+    ,
+    @NamedQuery(name = "Student.findByStuNO", query = "SELECT s FROM Student s WHERE s.studentNum = :stuNO")
+    ,
+    @NamedQuery(name = "Student.findByStuNOAndPassword", query = "SELECT s FROM Student s WHERE s.studentNum = :stuNO and s.password = :password")
+    ,
     @NamedQuery(name = "Student.findById", query = "SELECT s FROM Student s WHERE s.id = :id")})
-public class Student implements Serializable,Level{
+public class Student implements Serializable, Level {
 
     private static final long serialVersionUID = 1L;
 
@@ -49,6 +51,8 @@ public class Student implements Serializable,Level{
     @JoinColumn(name = "team_id", referencedColumnName = "id")
     @ManyToOne
     private Team team;
+    
+    public String level;
 
     public Student() {
     }
@@ -216,9 +220,14 @@ public class Student implements Serializable,Level{
 
     @Override
     public String toString() {
-        return "Student{" + "id=" + id + ", idCard=" + idCard + ", name=" + name + ", password=" + password
-                + ", studentNum=" + studentNum + ", achievements=" + achievements + ", informations="
-                + informations + ", team=" + team + '}';
+        return "Student{" + "id=" + id + ", idCard=" + idCard + ", name=" + name + ", password=" + password + ", studentNum=" + studentNum + ", achievements=" + achievements + ", informations=" + informations + ", team=" + team + '}';
     }
+
+    @Override
+    public void setLevel() {
+        this.level = "Student";
+    }
+
+   
 
 }

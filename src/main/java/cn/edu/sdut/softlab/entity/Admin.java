@@ -4,66 +4,81 @@ import java.io.Serializable;
 import javax.enterprise.inject.Alternative;
 import javax.persistence.*;
 
-
 /**
  * The persistent class for the admin database table.
- * 
+ *
  */
 @Entity
-@Table(name="admin")
-@Alternative
-@NamedQueries({@NamedQuery(name="Admin.findAll", query="SELECT a FROM Admin a"),
-                @NamedQuery(name = "Admin.findById",query = "SELECT a FROM Admin a WHERE a.id = :id"),
-                @NamedQuery(name = "Admin.findByIdAndPassword",query = "SELECT a FROM Admin a WHERE a.id = :id and a.password = :password"),
-                @NamedQuery(name = "Admin.findByNameAndPassword",query = "SELECT a FROM Admin a WHERE a.name = :name and a.password = :password")
+@Table(name = "admin")
+@NamedQueries({
+    @NamedQuery(name = "Admin.findAll", query = "SELECT a FROM Admin a")
+    ,
+                @NamedQuery(name = "Admin.findById", query = "SELECT a FROM Admin a WHERE a.id = :id")
+    ,
+                @NamedQuery(name = "Admin.findByIdAndPassword", query = "SELECT a FROM Admin a WHERE a.id = :id and a.password = :password")
+    ,
+                @NamedQuery(name = "Admin.findByNameAndPassword", query = "SELECT a FROM Admin a WHERE a.name = :name and a.password = :password")
 })
-public class Admin implements Serializable,Level{
-	private static final long serialVersionUID = 1L;
+public class Admin implements Serializable, Level {
 
-	@Id
-	@SequenceGenerator(name="ADMIN_ID_GENERATOR" )
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="ADMIN_ID_GENERATOR")
-	private int id;
+    private static final long serialVersionUID = 1L;
 
-	private String email;
+    @Id
+    @SequenceGenerator(name = "ADMIN_ID_GENERATOR")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ADMIN_ID_GENERATOR")
+    private int id;
 
-	private String name;
+    private String email;
 
-	private String password;
+    private String name;
 
-	public Admin() {
-	}
+    private String password;
+    
+    public  String level;
 
-	public int getId() {
-		return this.id;
-	}
+    public Admin() {
+    }
 
-	public void setId(int id) {
-		this.id = id;
-	}
+    public int getId() {
+        return this.id;
+    }
 
-	public String getEmail() {
-		return this.email;
-	}
+    public void setId(int id) {
+        this.id = id;
+    }
 
-	public void setEmail(String email) {
-		this.email = email;
-	}
+    public String getEmail() {
+        return this.email;
+    }
 
-	public String getName() {
-		return this.name;
-	}
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public String getName() {
+        return this.name;
+    }
 
-	public String getPassword() {
-		return this.password;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public void setPassword(String password) {
-		this.password = password;
-	}
+    public String getPassword() {
+        return this.password;
+    }
 
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    @Override
+    public String toString() {
+        return "Admin{" + "id=" + id + ", email=" + email + ", name=" + name + ", password=" + password + '}';
+    }
+
+    @Override
+    public void setLevel(){
+        this.level = "Student";
+    }
+    
 }

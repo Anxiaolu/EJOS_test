@@ -5,15 +5,17 @@ import cn.edu.sdut.softlab.entity.Admin;
 import cn.edu.sdut.softlab.entity.Student;
 import cn.edu.sdut.softlab.entity.Teacher;
 import cn.edu.sdut.softlab.qualifiers.LoggedIn;
+import cn.edu.sdut.softlab.qualifiers.Preferred;
 import cn.edu.sdut.softlab.service.AdminFacade;
 import cn.edu.sdut.softlab.service.StudentFacade;
 import cn.edu.sdut.softlab.service.TeacherFacade;
 
 import java.io.Serializable;
 import java.util.logging.Logger;
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 
 import javax.enterprise.context.SessionScoped;
-import javax.enterprise.inject.Produces;
 import javax.faces.application.ConfigurableNavigationHandler;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
@@ -36,33 +38,24 @@ public class LoginController implements Serializable {
     private Credentials credentials;
 
     @Inject
-    AdminFacade adminService;
-
-    @Inject
-    TeacherFacade teacherService;
-
-    @Inject
-    StudentFacade studentService;
-
-    @Inject
     FacesContext facesContext;
-
-    private Level currentUser = null;
-
-    @Produces
-    @LoggedIn
-    public Level getCurrentUser() {
-        return this.currentUser;
-    }
     
-    @Produces
-    @LoggedIn
-    public void check(Level level){
-        if (level != null) {
-            currentUser = level;
-            logger.info("Login:" + currentUser.toString());
-            facesContext.addMessage(null, new FacesMessage("Welcome, " + currentUser.getName()));
-        }
+    @Inject
+    @Preferred
+    Level currentUser;
+
+    //private User currentUser = null;
+
+//    public void check(Level level) {
+//        if (level != null) {
+//            currentUser = level;
+//            logger.info("Login:" + currentUser.toString());
+//            facesContext.addMessage(null, new FacesMessage("Welcome, " + currentUser.getName()));
+//        }
+//    }
+    
+    @PostConstruct
+    public void init(){
     }
 
     /**
@@ -70,30 +63,21 @@ public class LoginController implements Serializable {
      */
     public String login() {
         logger.info("Login Level:" + credentials.getLevel() + "-------------");
-        switch (credentials.getLevel()) {
-            case "Admin":
-                Admin admin = adminService.findByIdAndPassword(credentials.getNO().intValue(),credentials.getPassword());
-                check(admin);
-                break;
-            case "Teacher":
-                Teacher teacher = teacherService.findByTeacherNoAndPassword(credentials.getNO(), credentials.getPassword());
-                check(teacher);
-                break;
-            case "Student":
-               Student student = studentService.findByStuNOAndPassword(credentials.getNO(), credentials.getPassword());
-                check(student);
-                break;
-        }
+        logger.info("Login:" + currentUser.toString());
         return "/home.xhtml?faces-redirect=true";
     }
 
     /**
      * 处理退出登录逻辑.
      */
+    @PreDestroy
     public void logout() {
+        logger.info("LogOut:" + currentUser.toString() + "--------------");
         facesContext.addMessage(null, new FacesMessage("Goodbye, " + currentUser.getName()));
-        logger.info("LogOut:" + currentUser.getName() + "--------------");
         currentUser = null;
+        FacesContext context = FacesContext.getCurrentInstance();
+        ConfigurableNavigationHandler handler = (ConfigurableNavigationHandler) context.getApplication().getNavigationHandler();
+        handler.performNavigation("login");
     }
 
     /**

@@ -5,112 +5,126 @@ import javax.persistence.*;
 import java.math.BigInteger;
 import java.util.Set;
 
-
 /**
  * The persistent class for the teacher database table.
- * 
+ *
  */
 @Entity
-@Table(name="teacher")
+@Table(name = "teacher")
 @NamedQueries({
-	  @NamedQuery(name = "Teacher.findAll", query = "SELECT t FROM Teacher t"),
-	  @NamedQuery(name = "Teacher.findByTeaNOAndPassword", query = "SELECT t FROM Teacher t WHERE t.teacherNum = :teaNO and t.password = :password"),
+    @NamedQuery(name = "Teacher.findAll", query = "SELECT t FROM Teacher t")
+    ,
+	  @NamedQuery(name = "Teacher.findByTeaNOAndPassword", query = "SELECT t FROM Teacher t WHERE t.teacherNum = :teaNO and t.password = :password")
+    ,
 	  @NamedQuery(name = "Teacher.findByTeaNO", query = "SELECT t FROM Teacher t WHERE t.teacherNum = :teaNO")})
-public class Teacher implements Serializable,Level{
-	private static final long serialVersionUID = 1L;
+public class Teacher implements Serializable, Level {
 
-	@Id
-	@SequenceGenerator(name="TEACHER_ID_GENERATOR" )
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="TEACHER_ID_GENERATOR")
-	private int id;
+    private static final long serialVersionUID = 1L;
 
-	@Column(name="id_card")
-	private String idCard;
+    @Id
+    @SequenceGenerator(name = "TEACHER_ID_GENERATOR")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "TEACHER_ID_GENERATOR")
+    private int id;
 
-	private String name;
+    @Column(name = "id_card")
+    private String idCard;
 
-	private String password;
+    private String name;
 
-	@Column(name="teacher_num")
-	private BigInteger teacherNum;
+    private String password;
 
-	private BigInteger tel;
+    @Column(name = "teacher_num")
+    private BigInteger teacherNum;
 
-	//bi-directional many-to-one association to Team
-	@OneToMany(mappedBy="teacher", fetch=FetchType.LAZY)
-	private Set<Team> teams;
+    private BigInteger tel;
 
-	public Teacher() {
-	}
+    //bi-directional many-to-one association to Team
+    @OneToMany(mappedBy = "teacher", fetch = FetchType.LAZY)
+    private Set<Team> teams;
+    
+    public String level;
 
-	public int getId() {
-		return this.id;
-	}
+    public Teacher() {
+    }
 
-	public void setId(int id) {
-		this.id = id;
-	}
+    public int getId() {
+        return this.id;
+    }
 
-	public String getIdCard() {
-		return this.idCard;
-	}
+    public void setId(int id) {
+        this.id = id;
+    }
 
-	public void setIdCard(String idCard) {
-		this.idCard = idCard;
-	}
+    public String getIdCard() {
+        return this.idCard;
+    }
 
-	public String getName() {
-		return this.name;
-	}
+    public void setIdCard(String idCard) {
+        this.idCard = idCard;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public String getName() {
+        return this.name;
+    }
 
-	public String getPassword() {
-		return this.password;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public void setPassword(String password) {
-		this.password = password;
-	}
+    public String getPassword() {
+        return this.password;
+    }
 
-	public BigInteger getTeacherNum() {
-		return this.teacherNum;
-	}
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
-	public void setTeacherNum(BigInteger teacherNum) {
-		this.teacherNum = teacherNum;
-	}
+    public BigInteger getTeacherNum() {
+        return this.teacherNum;
+    }
 
-	public BigInteger getTel() {
-		return this.tel;
-	}
+    public void setTeacherNum(BigInteger teacherNum) {
+        this.teacherNum = teacherNum;
+    }
 
-	public void setTel(BigInteger tel) {
-		this.tel = tel;
-	}
+    public BigInteger getTel() {
+        return this.tel;
+    }
 
-	public Set<Team> getTeams() {
-		return this.teams;
-	}
+    public void setTel(BigInteger tel) {
+        this.tel = tel;
+    }
 
-	public void setTeams(Set<Team> teams) {
-		this.teams = teams;
-	}
+    public Set<Team> getTeams() {
+        return this.teams;
+    }
 
-	public Team addTeam(Team team) {
-		getTeams().add(team);
-		team.setTeacher(this);
+    public void setTeams(Set<Team> teams) {
+        this.teams = teams;
+    }
 
-		return team;
-	}
+    public Team addTeam(Team team) {
+        getTeams().add(team);
+        team.setTeacher(this);
 
-	public Team removeTeam(Team team) {
-		getTeams().remove(team);
-		team.setTeacher(null);
+        return team;
+    }
 
-		return team;
-	}
+    public Team removeTeam(Team team) {
+        getTeams().remove(team);
+        team.setTeacher(null);
 
+        return team;
+    }
+
+    @Override
+    public String toString() {
+        return "Teacher{" + "id=" + id + ", idCard=" + idCard + ", name=" + name + ", password=" + password + ", teacherNum=" + teacherNum + ", tel=" + tel + '}';
+    }
+    
+    @Override
+    public void setLevel(){
+        this.level = "Teacher";
+    }
+    
 }
