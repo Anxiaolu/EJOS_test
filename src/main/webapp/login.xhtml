@@ -53,7 +53,7 @@
                                 <h:form role="form" class="login-form"
                                         id="loginForm">
                                     <h:messages/>
-                                    <h:panelGrid columns="1" rendered="#{!login.loggedIn}">
+                                    <h:panelGrid columns="1" rendered="true">
                                         <div class="form-group">
                                             <p:inputText
                                                 value="#{credentials.NO}" placeholder="Username..."
@@ -68,7 +68,7 @@
                                                 styleClass="form-password form-control" id="form-password" type="password"/>
                                         </div>
                                         <div class="form-group">
-                                            <p:selectOneRadio id="UserRadio" value="#{credentials.level}" required="true" requiredMessage="请选择你登录的身份">
+                                            <p:selectOneRadio id="UserRadio" value="#{login.level}" required="true" requiredMessage="请选择你登录的身份">
                                                 <f:selectItem itemLabel="Admin" itemValue="Admin" />
                                                 <f:selectItem itemLabel="Teacher" itemValue="Teacher" />
                                                 <f:selectItem itemLabel="Student" itemValue="Student" />
@@ -76,7 +76,7 @@
                                         </div>
                                     </h:panelGrid>
                                     <h:commandButton id="login" value="Login"
-                                                     action="#{login.login}" rendered="#{!login.loggedIn}" 
+                                                     action="#{login.login}" rendered="true" 
                                                      styleClass="button"/>
                                 </h:form>
                             </div>

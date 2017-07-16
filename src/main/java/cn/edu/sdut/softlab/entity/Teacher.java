@@ -17,7 +17,7 @@ import java.util.Set;
 	  @NamedQuery(name = "Teacher.findByTeaNOAndPassword", query = "SELECT t FROM Teacher t WHERE t.teacherNum = :teaNO and t.password = :password")
     ,
 	  @NamedQuery(name = "Teacher.findByTeaNO", query = "SELECT t FROM Teacher t WHERE t.teacherNum = :teaNO")})
-public class Teacher implements Serializable, Level {
+public class Teacher implements Serializable, User {
 
     private static final long serialVersionUID = 1L;
 
@@ -125,6 +125,11 @@ public class Teacher implements Serializable, Level {
     @Override
     public void setLevel(){
         this.level = "Teacher";
+    }
+    
+    @Override
+    public String getLevel(){
+        return this.level;
     }
     
 }

@@ -19,7 +19,7 @@ import javax.persistence.*;
     ,
                 @NamedQuery(name = "Admin.findByNameAndPassword", query = "SELECT a FROM Admin a WHERE a.name = :name and a.password = :password")
 })
-public class Admin implements Serializable, Level {
+public class Admin implements Serializable, User {
 
     private static final long serialVersionUID = 1L;
 
@@ -79,6 +79,11 @@ public class Admin implements Serializable, Level {
     @Override
     public void setLevel(){
         this.level = "Student";
+    }
+    
+    @Override
+    public String getLevel(){
+        return this.level;
     }
     
 }

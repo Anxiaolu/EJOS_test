@@ -1,10 +1,8 @@
 package cn.edu.sdut.softlab.controller;
 
-import cn.edu.sdut.softlab.entity.Level;
 import cn.edu.sdut.softlab.entity.Admin;
 import cn.edu.sdut.softlab.entity.Student;
 import cn.edu.sdut.softlab.entity.Teacher;
-import cn.edu.sdut.softlab.qualifiers.LoggedIn;
 import cn.edu.sdut.softlab.qualifiers.Preferred;
 import cn.edu.sdut.softlab.service.AdminFacade;
 import cn.edu.sdut.softlab.service.StudentFacade;
@@ -22,55 +20,103 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.ComponentSystemEvent;
 import javax.inject.Inject;
 import javax.inject.Named;
+import cn.edu.sdut.softlab.entity.User;
+import cn.edu.sdut.softlab.qualifiers.LoggedIn;
+import cn.edu.sdut.softlab.util.UserProducers;
+import javax.enterprise.inject.Default;
 
 @SessionScoped
 @Named("login")
 public class LoginController implements Serializable {
 
     private static final long serialVersionUID = 7965455427888195913L;
+    
+    private String level;
 
-    private String level = null;
+    public String getLevel() {
+        return level;
+    }
+
+    public void setLevel(String level) {
+        this.level = level;
+    }
 
     @Inject
     Logger logger;
 
     @Inject
     private Credentials credentials;
+    
+    @Inject
+    AdminFacade adminService;
+    
+    @Inject
+    TeacherFacade teacherService;
+    
+    @Inject
+    StudentFacade studentService;
 
     @Inject
     FacesContext facesContext;
     
     @Inject
-    @Preferred
-    Level currentUser;
-
-    //private User currentUser = null;
-
-//    public void check(Level level) {
-//        if (level != null) {
-//            currentUser = level;
-//            logger.info("Login:" + currentUser.toString());
-//            facesContext.addMessage(null, new FacesMessage("Welcome, " + currentUser.getName()));
-//        }
-//    }
+    UserProducers userProducers;
     
-    @PostConstruct
-    public void init(){
+    @Inject
+    @LoggedIn
+    private User currentUser;
+
+    public User getCurrentUser() {
+        return currentUser;
+    }
+
+    public void setCurrentUser(User currentUser) {
+        this.currentUser = currentUser;
+    }
+
+    public void check(User level) {
+        if (level != null) {
+            currentUser = level;
+        }
     }
 
     /**
      * 处理登录逻辑.
      */
     public String login() {
-        logger.info("Login Level:" + credentials.getLevel() + "-------------");
+        //logger.info("Login Level:" + credentials.getLevel() + "-------------");
+        switch (this.getLevel()) {
+            case "Admin":
+                Admin admin = adminService.findByIdAndPassword(credentials.getNO().intValue(), credentials.getPassword());
+                check(admin);
+                break;
+            case "Teacher":
+                Teacher teacher = teacherService.findByTeacherNoAndPassword(credentials.getNO(), credentials.getPassword());
+                check(teacher);
+                break;
+            case "Student":
+                Student student = studentService.findByStuNOAndPassword(credentials.getNO(), credentials.getPassword());
+                check(student);
+                break;
+        }
         logger.info("Login:" + currentUser.toString());
+        currentUser = userProducers.getUser(this.getLevel());
+        facesContext.addMessage(null, new FacesMessage("Welcome, " + currentUser.getName()));
         return "/home.xhtml?faces-redirect=true";
+    }   
+    
+    @PostConstruct
+    public void init(){
+        System.out.println("GreetingController post construct......");
     }
 
+    @PreDestroy
+    public void destory(){
+        System.out.println("GreetingController pre destroy......");
+    }
     /**
      * 处理退出登录逻辑.
      */
-    @PreDestroy
     public void logout() {
         logger.info("LogOut:" + currentUser.toString() + "--------------");
         facesContext.addMessage(null, new FacesMessage("Goodbye, " + currentUser.getName()));

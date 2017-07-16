@@ -17,7 +17,6 @@
  */
 package cn.edu.sdut.softlab.controller;
 
-import cn.edu.sdut.softlab.qualifiers.LoggedIn;
 import java.math.BigInteger;
 
 import javax.enterprise.context.RequestScoped;
@@ -29,18 +28,9 @@ public class Credentials {
 
     private BigInteger NO;
     private String password;
-    private String level;
 
     public BigInteger getNO() {
         return NO;
-    }
-
-    public String getLevel() {
-        return level;
-    }
-
-    public void setLevel(String level) {
-        this.level = level;
     }
 
     public void setNO(BigInteger no) {

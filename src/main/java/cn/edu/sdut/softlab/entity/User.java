@@ -9,10 +9,14 @@ package cn.edu.sdut.softlab.entity;
  * 
  * @author huanlu
  */
-public interface Level {
+public interface User {
+    
+    String level = "";
     
     void setLevel();
-    
+
+    String getLevel();
+            
     String getPassword();
     
     String getName();

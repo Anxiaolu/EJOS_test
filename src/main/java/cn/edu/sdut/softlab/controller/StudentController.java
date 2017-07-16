@@ -5,7 +5,6 @@
  */
 package cn.edu.sdut.softlab.controller;
 
-import cn.edu.sdut.softlab.entity.Level;
 import cn.edu.sdut.softlab.entity.Student;
 import cn.edu.sdut.softlab.entity.Team;
 import cn.edu.sdut.softlab.service.StudentFacade;
@@ -23,6 +22,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.servlet.http.HttpSession;
 import javax.transaction.UserTransaction;
 import org.primefaces.event.RowEditEvent;
+import cn.edu.sdut.softlab.entity.User;
 
 /**
  *
