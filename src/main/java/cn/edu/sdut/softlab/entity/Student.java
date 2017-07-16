@@ -219,13 +219,8 @@ public class Student implements Serializable, User {
     }
 
     @Override
-    public String toString() {
-        return "Student{" + "id=" + id + ", idCard=" + idCard + ", name=" + name + ", password=" + password + ", studentNum=" + studentNum + ", achievements=" + achievements + ", informations=" + informations + ", team=" + team + '}';
-    }
-
-    @Override
-    public void setLevel() {
-        this.level = "Student";
+    public void setLevel(String level) {
+        this.level = level;
     }
 
    @Override
@@ -233,4 +228,11 @@ public class Student implements Serializable, User {
         return this.level;
     }
 
+    @Override
+    public String toString() {
+        return "Student{" + "id=" + id + ", idCard=" + idCard + ", name=" + name 
+                + ", password=" + password + ", studentNum=" + studentNum + ", team=" 
+                + team + ", level=" + level + '}';
+    }
+    
 }

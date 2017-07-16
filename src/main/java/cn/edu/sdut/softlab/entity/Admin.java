@@ -72,18 +72,18 @@ public class Admin implements Serializable, User {
     }
 
     @Override
-    public String toString() {
-        return "Admin{" + "id=" + id + ", email=" + email + ", name=" + name + ", password=" + password + '}';
-    }
-
-    @Override
-    public void setLevel(){
-        this.level = "Student";
+    public void setLevel(String level){
+        this.level = level;
     }
     
     @Override
     public String getLevel(){
         return this.level;
+    }
+
+    @Override
+    public String toString() {
+        return "Admin{" + "id=" + id + ", email=" + email + ", name=" + name + ", password=" + password + ", level=" + level + '}';
     }
     
 }

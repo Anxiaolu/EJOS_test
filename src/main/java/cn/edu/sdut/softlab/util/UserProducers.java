@@ -6,6 +6,7 @@
 package cn.edu.sdut.softlab.util;
 
 import cn.edu.sdut.softlab.controller.Credentials;
+import cn.edu.sdut.softlab.controller.LoginController;
 import cn.edu.sdut.softlab.entity.Admin;
 import cn.edu.sdut.softlab.entity.Student;
 import cn.edu.sdut.softlab.entity.Teacher;
@@ -30,10 +31,20 @@ import javax.inject.Named;
  */
 @Named
 @RequestScoped
-public class UserProducers implements Serializable{
+public class UserProducers implements Serializable {
 
     public UserProducers() {
         System.out.print("UserProducers constructor called");
+    }
+    
+    private String level;
+
+    public String getLevel() {
+        return level;
+    }
+
+    public void setLevel(String level) {
+        this.level = level;
     }
     
     @Inject
@@ -42,21 +53,30 @@ public class UserProducers implements Serializable{
     @Inject
     @Default
     Credentials credentials;
-    
+
+    @Inject
+    AdminFacade adminService;
+
+    @Inject
+    TeacherFacade teacherService;
+
+    @Inject
+    StudentFacade studentService;
+
     @Produces
     @Preferred
     @SessionScoped
-    public User getUser(String level){
-        switch(level){
-            case "Admin": 
-                return new Admin();
+    public User getUser() {
+        switch (this.level) {
+            case "Admin":
+                return (Admin) adminService.findByIdAndPassword(credentials.getNO().intValue(), credentials.getPassword());
             case "Teacher":
-                return new Teacher();
+                return teacherService.findByTeacherNoAndPassword(credentials.getNO(), credentials.getPassword());
             case "Student":
-                return new Student();
+                return studentService.findByStuNOAndPassword(credentials.getNO(), credentials.getPassword());
             default:
                 return null;
         }
     }
-    
+
 }

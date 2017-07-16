@@ -13,7 +13,7 @@ public interface User {
     
     String level = "";
     
-    void setLevel();
+    void setLevel(String level);
 
     String getLevel();
             

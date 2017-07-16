@@ -118,18 +118,21 @@ public class Teacher implements Serializable, User {
     }
 
     @Override
-    public String toString() {
-        return "Teacher{" + "id=" + id + ", idCard=" + idCard + ", name=" + name + ", password=" + password + ", teacherNum=" + teacherNum + ", tel=" + tel + '}';
-    }
-    
-    @Override
-    public void setLevel(){
-        this.level = "Teacher";
+    public void setLevel(String level){
+        this.level = level;
     }
     
     @Override
     public String getLevel(){
         return this.level;
     }
+
+    @Override
+    public String toString() {
+        return "Teacher{" + "id=" + id + ", idCard=" + idCard + ", name=" + name + ", password=" 
+                + password + ", teacherNum=" + teacherNum + ", tel=" + tel + ", level=" + level + '}';
+    }
+    
+    
     
 }
