@@ -34,6 +34,7 @@ public class Admin implements Serializable, User {
 
     private String password;
     
+    //@Transient
     public  String level;
 
     public Admin() {

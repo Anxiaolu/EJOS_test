@@ -42,6 +42,7 @@ public class Teacher implements Serializable, User {
     @OneToMany(mappedBy = "teacher", fetch = FetchType.LAZY)
     private Set<Team> teams;
     
+    //@Transient
     public String level;
 
     public Teacher() {

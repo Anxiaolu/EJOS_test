@@ -5,12 +5,15 @@
  */
 package cn.edu.sdut.softlab.entity;
 
+import javax.persistence.Transient;
+
 /**
  * 
  * @author huanlu
  */
 public interface User {
     
+    @Transient
     String level = "";
     
     void setLevel(String level);

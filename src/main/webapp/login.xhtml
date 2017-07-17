@@ -49,11 +49,11 @@
                                     <i class="fa fa-key"></i>
                                 </div>
                             </div>
-                            <div class="form-bottom">
+                            <div class="form-bottom">   
                                 <h:form role="form" class="login-form"
                                         id="loginForm">
                                     <h:messages/>
-                                    <h:panelGrid columns="1" rendered="true">
+                                    <h:panelGrid columns="1" rendered="#{!login.loggedIn}">
                                         <div class="form-group">
                                             <p:inputText
                                                 value="#{credentials.NO}" placeholder="Username..."
@@ -76,8 +76,11 @@
                                         </div>
                                     </h:panelGrid>
                                     <h:commandButton id="login" value="Login"
-                                                     action="#{login.login}" rendered="true" 
+                                                     action="#{login.login}" rendered="#{!login.loggedIn}"
                                                      styleClass="button"/>
+                                    <h:commandButton id="logout" value="Logout"
+                                                         action="#{login.logout}" rendered="#{login.loggedIn}" 
+                                                         styleClass="button"/>
                                 </h:form>
                             </div>
                         </div>

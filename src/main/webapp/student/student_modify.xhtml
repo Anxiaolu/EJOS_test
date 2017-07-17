@@ -56,14 +56,18 @@
                 </form>
                 <ul class="nav menu">
                     <li class="active"><a href="home.jsf"><span class="glyphicon glyphicon-dashboard"></span> Dashboard</a></li>
-                    <li><p:link href="ReadyKnow.jsf"><span class="glyphicon glyphicon-th">Ready&nbsp;To&nbsp;Know</span> </p:link></li>
+                    <li>
+                        <a data-toggle="modal" data-target="#myModal">
+                            <span class="glyphicon glyphicon-th">Ready To Know</span> 
+                        </a>
+                    </li>
                     <li><a href="Item_query_filter.jsf"><span class="glyphicon glyphicon-stats"></span> Item&nbsp;Filter</a></li>
                     <li><a href="LendItem.jsf"><span class="glyphicon glyphicon-list-alt"></span> LendItem</a></li>
                     <li><a href="forms.html"><span class="glyphicon glyphicon-pencil"></span> Forms</a></li>
                     <li><a href="panels.html"><span class="glyphicon glyphicon-info-sign"></span> Alerts &amp; Panels</a></li>
                     <li class="parent ">
                         <a href="#">
-                            <span class="glyphicon glyphicon-list"></span> Item Manager 
+                            <span class="glyphicon glyphicon-list"></span> Teacher Manager 
                             <span data-toggle="collapse" href="#sub-item-1" class="icon pull-right">
                                 <em class="glyphicon glyphicon-s glyphicon-plus"></em>
                             </span> 
@@ -71,24 +75,24 @@
                         <ul class="children collapse" id="sub-item-1">
                             <li>
                                 <a class="" href="Item.jsf">
-                                    <span class="glyphicon glyphicon-share-alt"></span> Add Item
+                                    <span class="glyphicon glyphicon-share-alt"></span> Add Teacher
                                 </a>
                             </li>
                             <li>
                                 <a class="" href="Item_remove.jsf">
-                                    <span class="glyphicon glyphicon-share-alt"></span> Drop Item
+                                    <span class="glyphicon glyphicon-share-alt"></span> Drop Teacher
                                 </a>
                             </li>
                             <li>
                                 <a class="" href="Item_modify.jsf">
-                                    <span class="glyphicon glyphicon-share-alt"></span> Modify Item
+                                    <span class="glyphicon glyphicon-share-alt"></span> Modify Teacher
                                 </a>
                             </li>
                         </ul>
                     </li>
                     <li class="parent ">
                         <a href="#">
-                            <span class="glyphicon glyphicon-list"></span> User Manager 
+                            <span class="glyphicon glyphicon-list"></span> Student Manager 
                             <span data-toggle="collapse" href="#sub-item-2" class="icon pull-right">
                                 <em class="glyphicon glyphicon-s glyphicon-plus"></em>
                             </span> 
@@ -96,17 +100,17 @@
                         <ul class="children collapse" id="sub-item-2">
                             <li>
                                 <a class="" href="users.jsf">
-                                    <span class="glyphicon glyphicon-share-alt"></span> Add User
+                                    <span class="glyphicon glyphicon-share-alt"></span> Add Student
                                 </a>
                             </li>
                             <li>
                                 <a class="" href="Stuff_remove.jsf">
-                                    <span class="glyphicon glyphicon-share-alt"></span> Drop User
+                                    <span class="glyphicon glyphicon-share-alt"></span> Drop Student
                                 </a>
                             </li>
                             <li>
                                 <a class="" href="Stuff_modify.jsf">
-                                    <span class="glyphicon glyphicon-share-alt"></span> Modify User
+                                    <span class="glyphicon glyphicon-share-alt"></span> Modify Student
                                 </a>
                             </li>
                         </ul>
@@ -132,12 +136,10 @@
                     <div class="col-xs-12 col-md-12 col-lg-12">
                         <h:messages/>
                         <h:form>
-                            <p:inputText value="#{stuController.currentstu.id = login.currentUser.id}" rendered="false"/>
-                            <p:inputText value="#{stuController.currentstu.studentNum = login.currentUser.studentNum}" rendered="false"/>
                             <p:inputText value="#{stuController.currentstu.name}" placeholder="#{login.currentUser.name}" required="true" requiredMessage="请输入要修改成的姓名"/><br/>
                             <p:inputText value="#{stuController.currentstu.password}" placeholder="#{login.currentUser.password}" required="true" requiredMessage="请输入要修改的密码"/><br/>
-                            <p:inputText value="#{stuController.currentstu.idCard}" placeholder="#{login.currentUser.idCard}" required="true" requiredMessage="请输入要修噶的id信息"/><br/>
-                            <h:commandButton action="#{stuController.modify}" value="Modify">
+                            <p:inputText value="#{stuController.currentstu.idCard}" placeholder="#{login.currentUser.idCard}" required="true" requiredMessage="请输入要修改的身份证信息"/><br/>
+                            <h:commandButton action="#{stuController.modifyMySelf(login.currentUser)}" value="Modify">
                             </h:commandButton>
                         </h:form>
                     </div>

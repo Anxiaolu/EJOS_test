@@ -21,8 +21,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.servlet.http.HttpSession;
 import javax.transaction.UserTransaction;
+import javax.ws.rs.NotFoundException;
 import org.primefaces.event.RowEditEvent;
-import cn.edu.sdut.softlab.entity.User;
 
 /**
  *
@@ -31,7 +31,7 @@ import cn.edu.sdut.softlab.entity.User;
 @RequestScoped
 @Named("stuController")
 public class StudentController {
-    
+
     @Inject
     Logger logger;
 
@@ -43,14 +43,10 @@ public class StudentController {
 
     @Inject
     StudentFacade studentSerivce;
-    
-    @ManagedProperty(value = "#{login.currentUser}")
-    @SessionScoped
-    private Student loginStudent;
 
     private Student currentstu = new Student(new Team(1));
 
-    public Student getCurrentstu(){
+    public Student getCurrentstu() {
         return currentstu;
     }
 
@@ -91,8 +87,8 @@ public class StudentController {
         FacesContext.getCurrentInstance().addMessage(null, msg);
         currentstu = null;
     }
-    
-    public void modify() throws Exception{
+
+    public void modify() throws Exception {
         //System.out.print(loginStudent.toString());
         HttpSession session = (HttpSession) (FacesContext) FacesContext.getCurrentInstance().getExternalContext().getSession(true);
         Student loginStudent = (Student) session.getAttribute("currentUser");
@@ -102,10 +98,32 @@ public class StudentController {
             utx.begin();
             em.merge(currentstu);
             logger.info("Student Edit:" + currentstu.toString());
-        } finally{
+        } finally {
             currentstu = null;
             utx.commit();
         }
     }
-    
+
+    public String modifyMySelf(Student loginStudent) throws Exception {
+        logger.info("Student information modify:" + loginStudent.toString());
+        utx.begin();
+        currentstu.setId(loginStudent.getId());
+        currentstu.setStudentNum(loginStudent.getStudentNum());
+        em.merge(currentstu);
+        utx.commit();
+        return "";
+    }
+
+    public void delete(Student stu) throws Exception {
+        logger.info(stu.toString() + "-------------------------------------------------------------");
+        Student delectStu = studentSerivce.findByStuId(stu.getId());
+        try {
+            utx.begin();
+            logger.info("Student Delete Called:" + delectStu.toString());
+            em.remove(delectStu);
+        } finally {
+            utx.commit();
+        }
+    }
+
 }

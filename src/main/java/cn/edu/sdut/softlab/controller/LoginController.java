@@ -1,17 +1,8 @@
 package cn.edu.sdut.softlab.controller;
 
-import cn.edu.sdut.softlab.entity.Admin;
-import cn.edu.sdut.softlab.entity.Student;
-import cn.edu.sdut.softlab.entity.Teacher;
-import cn.edu.sdut.softlab.qualifiers.Preferred;
-import cn.edu.sdut.softlab.service.AdminFacade;
-import cn.edu.sdut.softlab.service.StudentFacade;
-import cn.edu.sdut.softlab.service.TeacherFacade;
-
 import java.io.Serializable;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
 
 import javax.enterprise.context.SessionScoped;
 import javax.faces.application.ConfigurableNavigationHandler;
@@ -22,7 +13,6 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import cn.edu.sdut.softlab.entity.User;
 import cn.edu.sdut.softlab.util.UserProducers;
-import javax.enterprise.event.Observes;
 
 @SessionScoped
 @Named("login")
@@ -63,6 +53,7 @@ public class LoginController implements Serializable {
     }
 
     /**
+     * 
      * 处理登录逻辑.
      */
     public String login() {
@@ -95,7 +86,6 @@ public class LoginController implements Serializable {
      * @return true：已经登录；false：没有登录
      */
     public boolean isLoggedIn() {
-        logger.info(currentUser.toString());
         return currentUser != null;//才看明白，null != null 没登录！
     }
 
@@ -107,7 +97,22 @@ public class LoginController implements Serializable {
             handler.performNavigation("login");
         }
     }
-
+    
+    public boolean isAdmin(){
+        return currentUser.getLevel().equals("Admin");
+    }
+    
+    public boolean isTeacher(){
+        return currentUser.getLevel().equals("Teacher");
+    }
+    
+    public boolean isAdminOrTeacher(){
+        if (currentUser.getLevel().equals("Admin") || currentUser.getLevel().equals("Teacher")) {
+            return true;
+        }
+        return false;
+    }
+    
     /**
      * 异步根据前台绑定的根据登录学生的id查询,返回对应的
      *

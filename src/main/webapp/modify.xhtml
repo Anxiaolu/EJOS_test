@@ -5,6 +5,8 @@
       xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:p="http://primefaces.org/ui"
       xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+    <f:view>
+        <f:event type="preRenderView" listener="#{login.checkLogin}"/>
         <h:head>
             <meta charset="utf-8"/>
             <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
@@ -145,14 +147,14 @@
                                 <f:facet name="input"><p:inputText id="modelInput" value="#{stuController.currentstu.id = stu.id}" style="width:100%"/></f:facet>
                             </p:cellEditor>
                         </p:column>
-                        
+
                         <p:column headerText="StudentNum">
                             <p:cellEditor>
                                 <f:facet name="output"><h:outputText value="#{stu.studentNum}" /></f:facet>
                                 <f:facet name="input"><p:inputText value="#{stuController.currentstu.studentNum}" style="width:100%"/></f:facet>
                             </p:cellEditor>
                         </p:column>
-                        
+
                         <p:column headerText="IdCard">
                             <p:cellEditor>
                                 <f:facet name="output"><h:outputText value="#{stu.idCard}" /></f:facet>
@@ -186,8 +188,11 @@
                             </p:cellEditor>
                         </p:column>
 
-                        <p:column style="width:32px">
+                        <p:column style="width:64px">
                             <p:rowEditor />
+                        </p:column>
+                        <p:column style="width: 64px" headerText="Delete">
+                            <h:commandButton action="#{stuController.delete(stu)}" value="Delete"/>
                         </p:column>
                         <f:facet name="footer">
                             In total there are #{fn:length(stuController.all)} Items.
@@ -223,4 +228,5 @@
                 })
             </script>
         </h:body>
+    </f:view>
 </html>
