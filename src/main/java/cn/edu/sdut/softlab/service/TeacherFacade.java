@@ -49,4 +49,16 @@ public class TeacherFacade extends AbstractFacade<Teacher> {
         return findSingleByNamedQuery("Teacher.findByTeaNOAndPassword", parameters, Teacher.class).get();
     }
 
+    public Teacher findByTeaId(int id) {
+        Map<String, Object> parameters = new HashMap<>(0);
+        parameters.put("id", id);
+        return findSingleByNamedQuery("Teacher.findById", parameters, Teacher.class).get();
+    }
+    
+    public Teacher findByTeaName(String name) {
+        Map<String, Object> parameters = new HashMap<>(0);
+        parameters.put("name", name);
+        return findSingleByNamedQuery("Teacher.findByName", parameters, Teacher.class).get();
+    }
+
 }

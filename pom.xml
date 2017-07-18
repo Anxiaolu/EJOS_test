@@ -45,11 +45,6 @@
             <artifactId>primefaces</artifactId>
             <version>6.0</version>
         </dependency>
-<!--        <dependency>
-            <groupId>org.jberet</groupId>
-            <artifactId>jberet-core</artifactId>
-            <version>1.0.2.Final</version>
-        </dependency>-->
 
         <dependency>
             <groupId>javax</groupId>
@@ -103,31 +98,31 @@
                                            </executions>
                                    </plugin>
             -->
-            <!-- pmd 
-    <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-pmd-plugin</artifactId>
-            <version>3.6</version>
-            <configuration>
+            <!--pmd -->
+<!--            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-pmd-plugin</artifactId>
+                <version>3.6</version>
+                <configuration>
                     <includeTests>true</includeTests>
                     <minimumTokens>100</minimumTokens>
                     <linkXref>true</linkXref>
                     <targetJdk>${target.jdk}</targetJdk>
                     <failOnViolation>true</failOnViolation>
-            </configuration>
-            <executions>
+                </configuration>
+                <executions>
                     <execution>
-                            <phase>test</phase>
-                            <goals>
-                                    <goal>pmd</goal>
-                                    <goal>cpd</goal>
-                                    <goal>cpd-check</goal>
-                                    <goal>check</goal>
-                            </goals>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>pmd</goal>
+                            <goal>cpd</goal>
+                            <goal>cpd-check</goal>
+                            <goal>check</goal>
+                        </goals>
                     </execution>
-            </executions>
-    </plugin>
-            -->
+                </executions>
+            </plugin>-->
+            
 
             <!-- complier -->
             <plugin>

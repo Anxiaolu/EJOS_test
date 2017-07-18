@@ -12,11 +12,11 @@ import java.util.Set;
 @Entity
 @Table(name = "teacher")
 @NamedQueries({
-    @NamedQuery(name = "Teacher.findAll", query = "SELECT t FROM Teacher t")
-    ,
-	  @NamedQuery(name = "Teacher.findByTeaNOAndPassword", query = "SELECT t FROM Teacher t WHERE t.teacherNum = :teaNO and t.password = :password")
-    ,
-	  @NamedQuery(name = "Teacher.findByTeaNO", query = "SELECT t FROM Teacher t WHERE t.teacherNum = :teaNO")})
+    @NamedQuery(name = "Teacher.findAll", query = "SELECT t FROM Teacher t"),
+    @NamedQuery(name = "Teacher.findByTeaNOAndPassword", query = "SELECT t FROM Teacher t WHERE t.teacherNum = :teaNO and t.password = :password"),
+    @NamedQuery(name = "Teacher.findByTeaNO", query = "SELECT t FROM Teacher t WHERE t.teacherNum = :teaNO"),
+    @NamedQuery(name = "Teacher.findById", query = "SELECT t FROM Teacher t WHERE t.id = :id"),
+    @NamedQuery(name = "Teacher.findByName", query = "SELECT t FROM Teacher t WHERE t.name = :name")})
 public class Teacher implements Serializable, User {
 
     private static final long serialVersionUID = 1L;
@@ -41,7 +41,7 @@ public class Teacher implements Serializable, User {
     //bi-directional many-to-one association to Team
     @OneToMany(mappedBy = "teacher", fetch = FetchType.LAZY)
     private Set<Team> teams;
-    
+
     //@Transient
     public String level;
 
@@ -119,21 +119,19 @@ public class Teacher implements Serializable, User {
     }
 
     @Override
-    public void setLevel(String level){
+    public void setLevel(String level) {
         this.level = level;
     }
-    
+
     @Override
-    public String getLevel(){
+    public String getLevel() {
         return this.level;
     }
 
     @Override
     public String toString() {
-        return "Teacher{" + "id=" + id + ", idCard=" + idCard + ", name=" + name + ", password=" 
+        return "Teacher{" + "id=" + id + ", idCard=" + idCard + ", name=" + name + ", password="
                 + password + ", teacherNum=" + teacherNum + ", tel=" + tel + ", level=" + level + '}';
     }
-    
-    
-    
+
 }

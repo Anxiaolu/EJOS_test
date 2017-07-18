@@ -11,9 +11,7 @@ import cn.edu.sdut.softlab.service.StudentFacade;
 import java.util.List;
 import java.util.logging.Logger;
 import javax.enterprise.context.RequestScoped;
-import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedProperty;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -21,7 +19,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.servlet.http.HttpSession;
 import javax.transaction.UserTransaction;
-import javax.ws.rs.NotFoundException;
 import org.primefaces.event.RowEditEvent;
 
 /**
@@ -121,6 +118,7 @@ public class StudentController {
             utx.begin();
             logger.info("Student Delete Called:" + delectStu.toString());
             em.remove(delectStu);
+            em.flush();
         } finally {
             utx.commit();
         }
