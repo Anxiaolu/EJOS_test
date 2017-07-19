@@ -6,7 +6,6 @@
 package cn.edu.sdut.softlab.service;
 
 import cn.edu.sdut.softlab.entity.Admin;
-import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
 import javax.ejb.Stateless;
@@ -16,7 +15,6 @@ import javax.inject.Named;
  *
  * @author huanlu
  */
-@Stateless
 @Named("adminfacade")
 public class AdminFacade extends AbstractFacade<Admin>{
     

@@ -28,7 +28,6 @@ import cn.edu.sdut.softlab.entity.Student;
 /**
  * @author GaoYisheng 2017年5月10日 TODO
  */
-@Stateless
 @Named("studentfacade")
 public class StudentFacade extends AbstractFacade<Student> {
 

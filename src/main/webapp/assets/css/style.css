@@ -12,7 +12,6 @@ strong {
 }
 
 a, a:hover, a:focus {
-	color: #4aaf51;
 	text-decoration: none;
 	-o-transition: all .3s;
 	-moz-transition: all .3s;
@@ -298,6 +297,8 @@ button:active:focus, button.active:focus { outline: 0; opacity: 0.6; background:
     width: 60px;
     height: 60px;
 }
+
+
 
 
 /***** Media queries *****/

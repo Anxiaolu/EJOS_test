@@ -7,8 +7,10 @@ package cn.edu.sdut.softlab.controller;
 
 import cn.edu.sdut.softlab.entity.Student;
 import cn.edu.sdut.softlab.entity.Team;
+import cn.edu.sdut.softlab.entity.User;
 import cn.edu.sdut.softlab.service.StudentFacade;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
@@ -65,8 +67,8 @@ public class StudentController {
     public void onRowEdit(RowEditEvent event) throws Exception {
         Student editStudent = (Student) event.getObject();
         currentstu.setId(editStudent.getId());
-        logger.info("Student Edit!~~~~~~~~~~~~~~~~~~~~" + editStudent.toString());
-        logger.info("current information:    " + currentstu.toString());
+        logger.log(Level.INFO, "Student Edit!~~~~~~~~~~~~~~~~~~~~{0}", editStudent.toString());
+        logger.log(Level.INFO, "current information:    {0}", currentstu.toString());
         try {
             utx.begin();
             em.merge(currentstu);
@@ -80,21 +82,21 @@ public class StudentController {
     }
 
     public void onRowCancel(RowEditEvent event) {
-        FacesMessage msg = new FacesMessage("Edit Cancelled", ((Student) event.getObject()).getName());
+        FacesMessage msg = new FacesMessage("Edit Cancelled", ((User) event.getObject()).getName());
         FacesContext.getCurrentInstance().addMessage(null, msg);
         currentstu = null;
     }
 
     public void modify() throws Exception {
         //System.out.print(loginStudent.toString());
-        HttpSession session = (HttpSession) (FacesContext) FacesContext.getCurrentInstance().getExternalContext().getSession(true);
+        HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);
         Student loginStudent = (Student) session.getAttribute("currentUser");
         loginStudent.toString();
         currentstu.setStudentNum(loginStudent.getStudentNum());
         try {
             utx.begin();
             em.merge(currentstu);
-            logger.info("Student Edit:" + currentstu.toString());
+            logger.log(Level.INFO, "Student Edit:{0}", currentstu.toString());
         } finally {
             currentstu = null;
             utx.commit();
@@ -102,7 +104,7 @@ public class StudentController {
     }
 
     public String modifyMySelf(Student loginStudent) throws Exception {
-        logger.info("Student information modify:" + loginStudent.toString());
+        logger.log(Level.INFO, "Student information modify:{0}", loginStudent.toString());
         utx.begin();
         currentstu.setId(loginStudent.getId());
         currentstu.setStudentNum(loginStudent.getStudentNum());
@@ -112,11 +114,11 @@ public class StudentController {
     }
 
     public void delete(Student stu) throws Exception {
-        logger.info(stu.toString() + "-------------------------------------------------------------");
+        logger.log(Level.INFO, "{0}", stu.toString());
         Student delectStu = studentSerivce.findByStuId(stu.getId());
         try {
             utx.begin();
-            logger.info("Student Delete Called:" + delectStu.toString());
+            logger.log(Level.INFO, "Student Delete Called:{0}", delectStu.toString());
             em.remove(delectStu);
             em.flush();
         } finally {

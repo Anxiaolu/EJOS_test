@@ -7,14 +7,19 @@ package cn.edu.sdut.softlab.controller;
 
 import cn.edu.sdut.softlab.entity.Teacher;
 import cn.edu.sdut.softlab.service.TeacherFacade;
+import cn.edu.sdut.softlab.validator.StringIllegalValidator;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
+import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
+import javax.faces.validator.ValidatorException;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
+import javax.persistence.criteria.CriteriaQuery;
 import javax.transaction.UserTransaction;
 import org.primefaces.event.RowEditEvent;
 
@@ -38,6 +43,12 @@ public class TeacherController {
     @Inject
     EntityManager em;
     
+    @Inject
+    FacesContext facesContext;
+    
+    @Inject
+    StringIllegalValidator stringValidator;
+    
     private List<Teacher> filterTeachers;
 
     public List<Teacher> getFilterTeachers() {
@@ -48,7 +59,7 @@ public class TeacherController {
         this.filterTeachers = filterTeachers;
     }
     
-    private Teacher currentTea = null;
+    private Teacher currentTea = new Teacher();
 
     public Teacher getCurrentTea() {
         return currentTea;
@@ -58,9 +69,7 @@ public class TeacherController {
         this.currentTea = currentTea;
     }
     
-    public List<Teacher> findAll(){
-        return teacherService.findAll();
-    }
+    private Teacher deleteTeacher = new Teacher();
     
     private String deletename;
 
@@ -71,19 +80,29 @@ public class TeacherController {
     public void setDeletename(String deletename) {
         this.deletename = deletename;
     }
-
+    
+    public List<Teacher> getAll() throws Exception{
+        try{
+            utx.begin();
+            CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
+            cq.select(cq.from(Teacher.class));
+            return em.createQuery(cq).getResultList();
+        }finally{
+            utx.commit();
+        }
+    }
     
     public void onRowEdit(RowEditEvent event) throws Exception {
         Teacher editTeacher = (Teacher) event.getObject();
         currentTea.setId(editTeacher.getId());
-        logger.info("Student Edit!~~~~~~~~~~~~~~~~~~~~" + editTeacher.toString());
-        logger.info("current information:    " + currentTea.toString());
+        logger.log(Level.INFO, "Teacher Edit!~~~~~~~~~~~~~~~~~~~~{0}", editTeacher.toString());
+        logger.log(Level.INFO, "{0}current information:    ", currentTea.toString());
         try {
             utx.begin();
             em.merge(currentTea);
         } finally {
             utx.commit();
-            FacesMessage fms = new FacesMessage("Student modify", event.getObject().getClass().getName());
+            FacesMessage fms = new FacesMessage("Teacher modify", event.getObject().getClass().getName());
             FacesContext.getCurrentInstance().addMessage(null, fms);
             currentTea = null;
             event = null;
@@ -96,16 +115,46 @@ public class TeacherController {
         currentTea = null;
     }
     
+    public void add() throws Exception {
+        if (!currentTea.getName().equals("")) {
+            try {
+                utx.begin();
+                teacherService.create(currentTea);
+                logger.log(Level.INFO, "Added {0}", currentTea);
+            } finally {
+                utx.commit();
+            }
+        } else {
+            facesContext.addMessage(null, new FacesMessage("添加失败!"));
+        }
+    }
+    
     public void delete() throws Exception {
-        logger.info(deletename + " -----");
-        Teacher deleteTeacher = teacherService.findByTeaName(deletename);
-        logger.info(deleteTeacher.toString() + "-------------------------------------------------------------");
+        logger.log(Level.INFO, "{0} -----", deletename);
         try {
+            Teacher deleteTea = teacherService.findByTeaName(deletename);
+            if (deleteTea != null) {
+                deleteTeacher = deleteTea;
+            }
             utx.begin();
             em.remove(deleteTeacher);
-        } finally {
             utx.commit();
-            logger.info("Teacher Delete Called:" + deleteTeacher.toString());
+            facesContext.addMessage(null, new FacesMessage("您选中的教师已从数据库中删除"));
+        }catch(Exception e){
+            facesContext.addMessage(null, new FacesMessage("您输入的教师查询不到"));
+        }
+        finally {
+            logger.log(Level.INFO, "Teacher Delete Called:{0}", deleteTeacher.toString());
+        }
+    }
+    
+    public void teaAddValidator(FacesContext fc, UIComponent component, Object value) {
+        stringValidator.AddValidator(value);
+        List<Teacher> teachers = teacherService.findAll();
+        for (Teacher i : teachers) {
+            if (((String) value).equals(i.getName())) {
+                throw new ValidatorException(new FacesMessage("您要添加的物品已有，请验证确定后再次添加！"));
+            }
         }
     }
 }
