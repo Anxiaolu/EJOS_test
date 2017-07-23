@@ -20,7 +20,6 @@ import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.ejb.Stateless;
 import javax.inject.Named;
 
 import cn.edu.sdut.softlab.entity.Student;

@@ -20,6 +20,8 @@ import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.servlet.http.HttpSession;
+import javax.transaction.NotSupportedException;
+import javax.transaction.SystemException;
 import javax.transaction.UserTransaction;
 import org.primefaces.event.RowEditEvent;
 
@@ -121,7 +123,11 @@ public class StudentController {
             logger.log(Level.INFO, "Student Delete Called:{0}", delectStu.toString());
             em.remove(delectStu);
             em.flush();
-        } finally {
+        }catch(NotSupportedException | SystemException e){
+            
+            throw new RuntimeException(e);
+        } 
+        finally {
             utx.commit();
         }
     }
