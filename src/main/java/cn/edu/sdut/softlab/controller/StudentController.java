@@ -90,7 +90,6 @@ public class StudentController {
     }
 
     public void modify() throws Exception {
-        //System.out.print(loginStudent.toString());
         HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);
         Student loginStudent = (Student) session.getAttribute("currentUser");
         loginStudent.toString();
@@ -124,7 +123,6 @@ public class StudentController {
             em.remove(delectStu);
             em.flush();
         }catch(NotSupportedException | SystemException e){
-            
             throw new RuntimeException(e);
         } 
         finally {

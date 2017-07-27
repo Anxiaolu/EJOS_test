@@ -86,9 +86,10 @@ public class TeacherController {
             utx.begin();
             CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
             cq.select(cq.from(Teacher.class));
+            utx.commit();
             return em.createQuery(cq).getResultList();
         }finally{
-            utx.commit();
+            
         }
     }
     
@@ -129,7 +130,7 @@ public class TeacherController {
         }
     }
     
-    public void delete() throws Exception {
+    public String delete() throws Exception {
         logger.log(Level.INFO, "{0} -----", deletename);
         try {
             Teacher deleteTea = teacherService.findByTeaName(deletename);
@@ -138,6 +139,7 @@ public class TeacherController {
             }
             utx.begin();
             em.remove(deleteTeacher);
+            System.out.println("usertransation:" + utx.getStatus());
             utx.commit();
             facesContext.addMessage(null, new FacesMessage("您选中的教师已从数据库中删除"));
         }catch(Exception e){
@@ -145,6 +147,7 @@ public class TeacherController {
         }
         finally {
             logger.log(Level.INFO, "Teacher Delete Called:{0}", deleteTeacher.toString());
+            return "";
         }
     }
     
