@@ -6,11 +6,7 @@
 package cn.edu.sdut.softlab.util;
 
 import cn.edu.sdut.softlab.controller.Credentials;
-import cn.edu.sdut.softlab.controller.LoginController;
 import cn.edu.sdut.softlab.entity.Admin;
-import cn.edu.sdut.softlab.entity.Student;
-import cn.edu.sdut.softlab.entity.Teacher;
-import cn.edu.sdut.softlab.qualifiers.LoggedIn;
 import cn.edu.sdut.softlab.qualifiers.Preferred;
 import cn.edu.sdut.softlab.service.AdminFacade;
 import cn.edu.sdut.softlab.service.StudentFacade;
@@ -26,7 +22,7 @@ import java.io.Serializable;
 import javax.inject.Named;
 
 /**
- *
+ * 
  * @author huanlu
  */
 @Named
@@ -69,7 +65,7 @@ public class UserProducers implements Serializable {
     public User getUser() {
         switch (this.level) {
             case "Admin":
-                return (Admin) adminService.findByIdAndPassword(credentials.getNO().intValue(), credentials.getPassword());
+                return adminService.findByIdAndPassword(credentials.getNO().intValue(), credentials.getPassword());
             case "Teacher":
                 return teacherService.findByTeacherNoAndPassword(credentials.getNO(), credentials.getPassword());
             case "Student":

@@ -1,7 +1,6 @@
 package cn.edu.sdut.softlab.entity;
 
 import java.io.Serializable;
-import javax.enterprise.inject.Alternative;
 import javax.persistence.*;
 
 /**

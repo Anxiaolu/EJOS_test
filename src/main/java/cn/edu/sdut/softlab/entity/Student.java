@@ -40,7 +40,7 @@ public class Student implements Serializable, User {
     private BigInteger studentNum;
 
     //bi-directional many-to-one association to Achievement
-    @OneToMany(mappedBy = "student", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "student", fetch = FetchType.LAZY)
     private Set<Achievement> achievements;
 
     //bi-directional many-to-one association to Information

@@ -13,6 +13,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import cn.edu.sdut.softlab.entity.User;
 import cn.edu.sdut.softlab.util.UserProducers;
+import java.util.logging.Level;
 
 @SessionScoped
 @Named("login")
@@ -60,7 +61,7 @@ public class LoginController implements Serializable {
         userProducers.setLevel(this.getLevel());
         currentUser = userProducers.getUser();
         currentUser.setLevel(this.level);
-        logger.info("Login:" + currentUser.toString());
+        logger.log(Level.INFO, "Login:{0}", currentUser.toString());
         facesContext.addMessage(null, new FacesMessage("Welcome, " + currentUser.getName()));
         return "/home.xhtml?faces-redirect=true";
     }   
@@ -74,10 +75,10 @@ public class LoginController implements Serializable {
      * 处理退出登录逻辑.
      */
     public String logout() {
-        logger.info("LogOut:" + currentUser.toString() + "--------------");
+        logger.log(Level.INFO, "LogOut:{0}", currentUser.toString());
         facesContext.addMessage(null, new FacesMessage("Goodbye, " + currentUser.getName()));
         currentUser = null;
-        return "/login.xhtml?redirect=true";
+        return "/login.xhtml?faces-redirect=true";
     }
 
     /**

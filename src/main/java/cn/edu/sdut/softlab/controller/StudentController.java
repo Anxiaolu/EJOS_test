@@ -44,6 +44,9 @@ public class StudentController {
 
     @Inject
     StudentFacade studentSerivce;
+    
+    @Inject
+    FacesContext facesContext;
 
     private Student currentstu = new Student(new Team(1));
 
@@ -106,12 +109,16 @@ public class StudentController {
 
     public String modifyMySelf(Student loginStudent) throws Exception {
         logger.log(Level.INFO, "Student information modify:{0}", loginStudent.toString());
-        utx.begin();
-        currentstu.setId(loginStudent.getId());
-        currentstu.setStudentNum(loginStudent.getStudentNum());
-        em.merge(currentstu);
-        utx.commit();
-        return "";
+        try {
+            utx.begin();
+            currentstu.setId(loginStudent.getId());
+            currentstu.setStudentNum(loginStudent.getStudentNum());
+            em.merge(currentstu);
+            return "";
+        } finally {
+            utx.commit();
+            facesContext.addMessage("", new FacesMessage("您输入的信息已经修改!"));
+        }
     }
 
     public void delete(Student stu) throws Exception {
@@ -120,12 +127,11 @@ public class StudentController {
         try {
             utx.begin();
             logger.log(Level.INFO, "Student Delete Called:{0}", delectStu.toString());
-            em.remove(delectStu);
+            studentSerivce.remove(delectStu);
             em.flush();
-        }catch(NotSupportedException | SystemException e){
+        } catch (NotSupportedException | SystemException e) {
             throw new RuntimeException(e);
-        } 
-        finally {
+        } finally {
             utx.commit();
         }
     }

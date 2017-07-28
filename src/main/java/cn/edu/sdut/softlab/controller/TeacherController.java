@@ -6,6 +6,7 @@
 package cn.edu.sdut.softlab.controller;
 
 import cn.edu.sdut.softlab.entity.Teacher;
+import cn.edu.sdut.softlab.entity.User;
 import cn.edu.sdut.softlab.service.TeacherFacade;
 import cn.edu.sdut.softlab.validator.StringIllegalValidator;
 import java.util.List;
@@ -30,25 +31,25 @@ import org.primefaces.event.RowEditEvent;
 @ManagedBean(name = "teaController")
 @RequestScoped
 public class TeacherController {
-    
+
     @Inject
     Logger logger;
-    
+
     @Inject
     TeacherFacade teacherService;
-    
+
     @Inject
     UserTransaction utx;
-    
+
     @Inject
     EntityManager em;
-    
+
     @Inject
     FacesContext facesContext;
-    
+
     @Inject
     StringIllegalValidator stringValidator;
-    
+
     private List<Teacher> filterTeachers;
 
     public List<Teacher> getFilterTeachers() {
@@ -58,7 +59,7 @@ public class TeacherController {
     public void setFilterTeachers(List<Teacher> filterTeachers) {
         this.filterTeachers = filterTeachers;
     }
-    
+
     private Teacher currentTea = new Teacher();
 
     public Teacher getCurrentTea() {
@@ -68,9 +69,9 @@ public class TeacherController {
     public void setCurrentTea(Teacher currentTea) {
         this.currentTea = currentTea;
     }
-    
+
     private Teacher deleteTeacher = new Teacher();
-    
+
     private String deletename;
 
     public String getDeletename() {
@@ -80,16 +81,15 @@ public class TeacherController {
     public void setDeletename(String deletename) {
         this.deletename = deletename;
     }
-    
-    public List<Teacher> getAll() throws Exception{
-        try{
+
+    public List<Teacher> getAll() throws Exception {
+        try {
             utx.begin();
             CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
             cq.select(cq.from(Teacher.class));
-            utx.commit();
             return em.createQuery(cq).getResultList();
-        }finally{
-            
+        } finally{
+            utx.commit();
         }
     }
     
@@ -111,11 +111,11 @@ public class TeacherController {
     }
 
     public void onRowCancel(RowEditEvent event) {
-        FacesMessage msg = new FacesMessage("Edit Cancelled", ((Teacher) event.getObject()).getName());
+        FacesMessage msg = new FacesMessage("Edit Cancelled", ((User) event.getObject()).getName());
         FacesContext.getCurrentInstance().addMessage(null, msg);
         currentTea = null;
     }
-    
+
     public void add() throws Exception {
         if (!currentTea.getName().equals("")) {
             try {
@@ -129,28 +129,23 @@ public class TeacherController {
             facesContext.addMessage(null, new FacesMessage("添加失败!"));
         }
     }
-    
-    public String delete() throws Exception {
-        logger.log(Level.INFO, "{0} -----", deletename);
+
+    public void delete() throws Exception {
         try {
             Teacher deleteTea = teacherService.findByTeaName(deletename);
             if (deleteTea != null) {
                 deleteTeacher = deleteTea;
             }
             utx.begin();
-            em.remove(deleteTeacher);
+            teacherService.remove(deleteTeacher);
             System.out.println("usertransation:" + utx.getStatus());
             utx.commit();
             facesContext.addMessage(null, new FacesMessage("您选中的教师已从数据库中删除"));
-        }catch(Exception e){
-            facesContext.addMessage(null, new FacesMessage("您输入的教师查询不到"));
-        }
-        finally {
+        } finally {
             logger.log(Level.INFO, "Teacher Delete Called:{0}", deleteTeacher.toString());
-            return "";
         }
     }
-    
+
     public void teaAddValidator(FacesContext fc, UIComponent component, Object value) {
         stringValidator.AddValidator(value);
         List<Teacher> teachers = teacherService.findAll();
@@ -158,6 +153,20 @@ public class TeacherController {
             if (((String) value).equals(i.getName())) {
                 throw new ValidatorException(new FacesMessage("您要添加的物品已有，请验证确定后再次添加！"));
             }
+        }
+    }
+    
+    public String modifyMySelf(Teacher loginTeacher) throws Exception {
+        logger.log(Level.INFO, "Student information modify:{0}", loginTeacher.toString());
+        try {
+            utx.begin();
+            currentTea.setId(loginTeacher.getId());
+            currentTea.setTeacherNum(loginTeacher.getTeacherNum());
+            em.merge(currentTea);
+            return "";
+        } finally {
+            utx.commit();
+            facesContext.addMessage("", new FacesMessage("您输入的信息已经修改完成!"));
         }
     }
 }

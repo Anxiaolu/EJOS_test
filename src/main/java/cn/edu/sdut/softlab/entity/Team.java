@@ -26,7 +26,6 @@ public class Team implements Serializable {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "TEAM_ID_GENERATOR")
     private int id;
 
-    @Lob
     private String introduce;
 
     private String name;
