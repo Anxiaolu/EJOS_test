@@ -5,153 +5,154 @@
  */
 package cn.edu.sdut.softlab.util;
 
+import cn.edu.sdut.softlab.entity.Student;
 import com.csvreader.CsvReader;
-import java.io.BufferedReader;
+import com.csvreader.CsvWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.util.ArrayList;
+import java.nio.charset.Charset;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import java.util.Collections;
 import java.util.List;
-import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.faces.bean.ApplicationScoped;
 import javax.inject.Inject;
-import javax.servlet.http.HttpServletResponse;
-import static jdk.nashorn.internal.objects.NativeRegExp.test;
+import javax.inject.Named;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+import javax.transaction.UserTransaction;
+import org.hibernate.Session;
 import org.junit.Test;
-
+import org.hibernate.transform.ResultTransformer;
 
 /**
  *
  * @author huanlu
  */
+@Named(value = "csvUtil")
+@ApplicationScoped
 public class CSVUtil {
-    
+
     @Inject
     Logger logger;
-    
-//    public static String TAB = "\r\n";
-//
-//    static {
-//        Properties prop = System.getProperties();
-//        String os = prop.getProperty("os.name").toLowerCase();
-//        if (os.startsWith("win")) {
-//            TAB = "\r\n";
-//        } else if (os.startsWith("linux") || os.startsWith("unix")) {
-//            TAB = "\n";
-//        } else if (os.startsWith("mac")) {
-//            TAB = "\r";
-//        }
-//    }
-//    
-//    public void exportCsv(HttpServletResponse response, List<String> titles, List<List<String>> data, String fileName) {
-//        StringBuilder sb = new StringBuilder();
-//        OutputStream outputStream = null;
-//        for (int i = 0; i < titles.size(); i++) {
-//            if (i != titles.size() - 1) {
-//                sb.append(titles.get(i)).append(",");
-//            } else {
-//                sb.append(titles.get(i)).append(TAB);
-//            }
-//        }
-//        for (int i = 0; i < data.size(); i++) {
-//            List<String> row = data.get(i);
-//            for (int j = 0; j < row.size(); j++) {
-//                if (j != row.size() - 1) {
-//                    sb.append(row.get(j)).append(",");
-//                } else {
-//                    sb.append(row.get(j)).append(TAB);
-//                }
-//            }
-//        }
-//
-//        try {
-//
-//            response.addHeader("Content-Disposition", "attachment;fileName=" + new String(fileName.getBytes("UTF-8"), "iso8859-1"));
-//            //response.addHeader("Content-Length", "" + sb.length());  
-//            //response.setContentType("application/csv;charset=UTF-8"); 
-//            response.setContentType("multipart/form-data");//设置文件ContentType类型，这样设置，会自动判断下载文件类型
-//            outputStream = response.getOutputStream();
-//
-//            outputStream.write(new byte[]{(byte) 0xEF, (byte) 0xBB, (byte) 0xBF});//加上bom头，才不会中文乱码     
-//            outputStream.write(sb.toString().getBytes("UTF-8"));
-//            outputStream.flush();
-//        } catch (IOException e) {
-//            logger.log(Level.INFO, "CSVUtils.exportCsv error:{0}", e);
-//        } finally {
-//            try {
-//                outputStream.close();
-//            } catch (IOException e) {
-//                logger.log(Level.INFO, "CSVUtils.exportCsv close OutputStream error:{0}", e);
-//            }
-//        }
-//    }
-//
-//    public List<String> importCsv(File file) {
-//        List<String> data = new ArrayList<>();
-//        BufferedReader br = null;
-//        try {
-//            br = new BufferedReader(new FileReader(file));
-//            String line = "";
-//            while ((line = br.readLine()) != null) {
-//                data.add(line);
-//            }
-//        } catch (IOException e) {
-//            logger.log(Level.INFO, "CSVUtils.importCsv error:{0}", e);
-//        } finally {
-//            try {
-//                br.close();
-//            } catch (IOException e) {
-//                logger.log(Level.INFO, "CSVUtils.importCsv close BufferedReader error:{0}", e);
-//            }
-//        }
-//
-//        return data;
-//    }
-//
-//    public List<String> importCsv(InputStream inputStream) {
-//        List<String> data = new ArrayList<>();
-//        BufferedReader br = null;
-//        try {
-//            br = new BufferedReader(new InputStreamReader(inputStream));
-//            String line = "";
-//            while ((line = br.readLine()) != null) {
-//                data.add(line);
-//            }
-//
-//        } catch (IOException e) {
-//            logger.log(Level.INFO, "CSVUtils.importCsv error:{0}", e);
-//        } finally {
-//            try {
-//                br.close();
-//                inputStream.close();
-//            } catch (IOException e) {
-//                logger.log(Level.INFO, "CSVUtils.importCsv close BufferedReader or InputStream error:{0}", e);
-//            }
-//        }
-//        return data;
-//    }
-    
-    public static void read(String filePath) throws FileNotFoundException, IOException {
-        try {
 
-            CsvReader csvReader = new CsvReader(filePath);
-            csvReader.readHeaders();
-            while (csvReader.readRecord()) {
+    @Inject
+    EntityManager em;
+
+    /**
+     *
+     * @param filePath csv文件的路径
+     * @param delimiter 选择csv文件的分隔符
+     * @param isNeedHeader 选择是否读取表头
+     * @throws FileNotFoundException
+     * @throws IOException
+     */
+    @Test
+    public void read(String filePath, char delimiter, boolean isNeedHeader) throws FileNotFoundException, IOException {
+        try {
+            CsvReader csvReader = new CsvReader(filePath, delimiter, Charset.forName("UTF-8"));
+
+            //选择是否读取表头
+            if (isNeedHeader) {
+            } else {
+                csvReader.readHeaders();
+            }
+            while (csvReader.readRecord()) {//逐行读入数据
                 System.out.print(csvReader.getRawRecord());
                 System.out.print(csvReader.get("用户名"));
             }
+            csvReader.close();
         } catch (IOException e) {
         }
     }
-    
-    @Test
-    public static void main(String[] args) throws IOException {
-        read("/home/huanlu/Users.csv");
+
+    public ResultSetMetaData getResultSetMetaData() throws Exception {
+        String sql = "select * from teacher";
+        PreparedStatement ps = null;
+        try {
+            ps = em.unwrap(Connection.class).prepareStatement(sql);
+        } catch (SQLException ex) {
+            Logger.getLogger(CSVUtil.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        ResultSet resultSet = null;
+        try {
+            resultSet = ps.executeQuery();
+        } catch (SQLException ex) {
+            Logger.getLogger(CSVUtil.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return resultSet.getMetaData();
     }
     
+    public void getStudentsByTeam(){
+        Session session = em.unwrap(Session.class);
+        Student stu = em.find(Student.class, (Object)1);
+        org.hibernate.Query query = session.createFilter(stu.getTeam(),"where this.team.id = :stu_team_id");
+        query.setParameter("stu_team_id", 1);
+        List<Student> stus = query.list();
+        stus.forEach((s) -> {
+            System.out.println("cn.edu.sdut.softlab.controller.StudentController.getStudentsByTeam()" + s.toString());
+        });
+    }
+    
+    public void outOfCsv(String filePath, String sql,Object stu_team_id) throws Exception {
+        // 判断文件是否存在,存在则删除,然后创建新表格
+        File tmp = new File(filePath);
+        if (tmp.exists()) {
+            if (tmp.delete()) {
+                logger.info(filePath);
+            }
+        }
+
+//        query.setResultTransformer(
+//                //ToListResultTransformer.INSTANCE
+//                new ResultTransformer() {
+//            @Override
+//            public Object transformTuple(Object[] tuple, String[] aliases) {
+//                Integer id = (Integer) tuple[0];
+//                return ;
+//            }
+//
+//            @Override
+//            public List transformList(List collection) {
+//                return Collections.unmodifiableList(collection);
+//            }
+//        }
+//        );
+
+        // 创建CSV写对象
+        CsvWriter csvWriter = new CsvWriter(filePath, ',', Charset.forName("UTF-8"));
+
+        // 数据查询开始
+        PreparedStatement preparedStatement = em.unwrap(Connection.class).prepareStatement(sql);
+        ResultSet resultSet = preparedStatement.executeQuery();
+
+        // 获取结果集表头
+        ResultSetMetaData md = resultSet.getMetaData();
+        int columnCount = md.getColumnCount();
+        logger.info("返回结果字段个数:" + columnCount);
+
+        // 文件输出
+        csvWriter.flush();
+        csvWriter.close();
+    }
+    
+    @Test
+    public static void main(String[] args) throws Exception {
+        EntityManagerFactory factory = Persistence.createEntityManagerFactory("labUnit");
+        EntityManager em = factory.createEntityManager();
+        //UserTransaction transaction = (UserTransaction) em.getTransaction();
+        //transaction.begin();
+        //read("/home/huanlu/Users.csv", ',', true);
+        //headerSort(em);
+        //transaction.commit();
+        em.close();
+        factory.close();
+    }
 }
