@@ -6,31 +6,30 @@
 package cn.edu.sdut.softlab.util;
 
 import cn.edu.sdut.softlab.entity.Student;
+import cn.edu.sdut.softlab.service.StudentFacade;
 import com.csvreader.CsvReader;
 import com.csvreader.CsvWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.lang.reflect.Field;
 import java.nio.charset.Charset;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.faces.bean.ApplicationScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
-import javax.transaction.UserTransaction;
-import org.hibernate.Session;
+import net.sf.json.JSONObject;
 import org.junit.Test;
-import org.hibernate.transform.ResultTransformer;
 
 /**
  *
@@ -44,7 +43,7 @@ public class CSVUtil {
     Logger logger;
 
     @Inject
-    EntityManager em;
+    StudentFacade studentService;
 
     /**
      *
@@ -72,12 +71,66 @@ public class CSVUtil {
         } catch (IOException e) {
         }
     }
+    
+    public Object[] getFieldValues(Object object) {
+        if (object == null)
+            return null;
+        Field[] fields = object.getClass().getDeclaredFields();
+        List<Object> fieldValueList = new ArrayList<Object>();
+        //Map<String, Object> fieldValueMap = new HashMap<String, Object>();
+
+        try {
+            for (Field f : fields) {
+                if (f.getModifiers() > 2) {
+                    continue;
+                }
+                fieldValueList.add(f.get(object));
+                //fieldValueMap.put(f.getName(), f.get(object));
+            }
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+
+        return fieldValueList.toArray();
+        //return fieldValueMap.values().toArray();
+    }
+    
+    public String[] toStrings(Student s){
+        String[] stu = {Integer.toString(s.getId()),s.getName(),s.getPassword()
+                ,s.getIdCard(),s.getStudentNum().toString(),s.getTeam().getName()};  
+        return stu;
+    }
+    
+    /**
+     * 
+     * @param path  生成csv文件所选路径
+     * @param delimiter 选择分隔符
+     * @param stu_team_name 确定生成文件的名称
+     * @throws Exception 
+     */
+    public void writeWithStudentByTeam(String path,char delimiter,Integer stu_team_id) throws Exception{
+        try {
+            File f = new File("/home/huanlu/" + path + studentService.findByStuId(stu_team_id).getName() + ".csv");
+            OutputStream output = new FileOutputStream(f);
+            CsvWriter csvWriter = new CsvWriter(output, delimiter, Charset.forName("UTF-8"));
+            List<Student> stus = studentService.findByTeam(stu_team_id);
+            for (Student s:stus) {
+                csvWriter.writeRecord(this.toStrings(s));
+            }
+            csvWriter.flush();
+            csvWriter.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     public ResultSetMetaData getResultSetMetaData() throws Exception {
         String sql = "select * from teacher";
         PreparedStatement ps = null;
         try {
-            ps = em.unwrap(Connection.class).prepareStatement(sql);
+            ps = studentService.getEm().unwrap(Connection.class).prepareStatement(sql);
         } catch (SQLException ex) {
             Logger.getLogger(CSVUtil.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -90,18 +143,8 @@ public class CSVUtil {
         return resultSet.getMetaData();
     }
     
-    public void getStudentsByTeam(){
-        Session session = em.unwrap(Session.class);
-        Student stu = em.find(Student.class, (Object)1);
-        org.hibernate.Query query = session.createFilter(stu.getTeam(),"where this.team.id = :stu_team_id");
-        query.setParameter("stu_team_id", 1);
-        List<Student> stus = query.list();
-        stus.forEach((s) -> {
-            System.out.println("cn.edu.sdut.softlab.controller.StudentController.getStudentsByTeam()" + s.toString());
-        });
-    }
     
-    public void outOfCsv(String filePath, String sql,Object stu_team_id) throws Exception {
+    public void outOfCsv(String filePath, String sql) throws Exception {
         // 判断文件是否存在,存在则删除,然后创建新表格
         File tmp = new File(filePath);
         if (tmp.exists()) {
@@ -109,7 +152,9 @@ public class CSVUtil {
                 logger.info(filePath);
             }
         }
-
+        
+//        Query query = studentService.getHibernateQuery(sql);
+//        
 //        query.setResultTransformer(
 //                //ToListResultTransformer.INSTANCE
 //                new ResultTransformer() {
@@ -130,7 +175,7 @@ public class CSVUtil {
         CsvWriter csvWriter = new CsvWriter(filePath, ',', Charset.forName("UTF-8"));
 
         // 数据查询开始
-        PreparedStatement preparedStatement = em.unwrap(Connection.class).prepareStatement(sql);
+        PreparedStatement preparedStatement = studentService.getEm().unwrap(Connection.class).prepareStatement(sql);
         ResultSet resultSet = preparedStatement.executeQuery();
 
         // 获取结果集表头
@@ -143,16 +188,4 @@ public class CSVUtil {
         csvWriter.close();
     }
     
-    @Test
-    public static void main(String[] args) throws Exception {
-        EntityManagerFactory factory = Persistence.createEntityManagerFactory("labUnit");
-        EntityManager em = factory.createEntityManager();
-        //UserTransaction transaction = (UserTransaction) em.getTransaction();
-        //transaction.begin();
-        //read("/home/huanlu/Users.csv", ',', true);
-        //headerSort(em);
-        //transaction.commit();
-        em.close();
-        factory.close();
-    }
 }
