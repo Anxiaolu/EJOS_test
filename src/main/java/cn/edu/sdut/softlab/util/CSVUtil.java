@@ -31,6 +31,8 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.metamodel.EntityType;
+import javax.websocket.Session;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.junit.Test;
@@ -122,6 +124,8 @@ public class CSVUtil {
             File f = new File("/home/huanlu/" + path + "/" + studentService.findByStuId(stu_team_id).getTeam().getName() + ".csv");
             OutputStream output = new FileOutputStream(f);
             CsvWriter csvWriter = new CsvWriter(output, delimiter, Charset.forName("UTF-8"));
+            String[] tableheader = {"Id","学生姓名","密码","身份证号","学号","所在班级"};
+            csvWriter.writeRecord(tableheader);
             List<Student> stus = studentService.findByTeam(stu_team_id);
             for (Student s:stus) {
                 csvWriter.writeRecord(this.toStrings(s));
@@ -167,42 +171,19 @@ public class CSVUtil {
         Map<String,Object> emfproperties = emf.getProperties();
         //logger.info(emfproperties.toString());
         List<String> key = new ArrayList<>(emfproperties.keySet());
-//        for (String s : key) {
-//            System.out.println("000 " + s);
-//        }
-        org.hibernate.engine.spi.SessionImplementor sessionImp = (org.hibernate.engine.spi.SessionImplementor) em.getDelegate();
-        DatabaseMetaData metadata = null;
-        try {
-            metadata = sessionImp.connection().getMetaData();
-            logger.info(metadata.toString());
-            ResultSet res = metadata.getIndexInfo("ejos", null, table_name, false, true);
-            System.out.println("List of columns: ");
-            while (res.next()) {                
-                System.out.println("1 " + res.getString(1));
-                System.out.println("2 " + res.getString(2));
-                System.out.println("3 " + res.getString(3));
-                System.out.println("4 " + res.getString(4));
-                System.out.println("5 " + res.getString(5));
-                System.out.println("6 " + res.getString(6));
-                System.out.println("7 " + res.getString(7));
-                System.out.println("8 " + res.getString(8));
-                System.out.println("9 " + res.getString(9));
-                System.out.println("10 " + res.getString(10));
-            }
-//            while (res.next()) {
-//                System.out.println(
-//                        "  " + res.getString("TABLE_SCHEM")
-//                        + ", " + res.getString("TABLE_NAME")
-//                        + ", " + res.getString("COLUMN_NAME")
-//                        + ", " + res.getString("TYPE_NAME")
-//                        + ", " + res.getInt("COLUMN_SIZE")
-//                        + ", " + res.getInt("NULLABLE"));
-//            }
-            res.close();
-            System.out.println();
-        } catch (SQLException e) {
-            e.printStackTrace();
+        for (String s : key) {
+            System.out.println("000 " + s);
         }
+        
+//        EntityType<Student> entity = emf.getMetamodel().entity(Student.class);
+//
+//        EntityTypeImpl entityTypeImpl = (EntityTypeImpl) entity;
+//        ClassDescriptor descriptor = entityTypeImpl.getDescriptor();
+//
+//        String schema = descriptor.getDefaultTable().getTableQualifier();
+
+        DatabaseMetaData metadata = null;
+         
     }
     
 }
