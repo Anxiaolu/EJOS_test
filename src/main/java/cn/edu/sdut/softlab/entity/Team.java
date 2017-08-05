@@ -3,6 +3,7 @@ package cn.edu.sdut.softlab.entity;
 import java.io.Serializable;
 import javax.persistence.*;
 import java.util.Set;
+import javax.validation.constraints.Size;
 
 /**
  * The persistent class for the team database table.
@@ -26,8 +27,10 @@ public class Team implements Serializable {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "TEAM_ID_GENERATOR")
     private int id;
 
+    @Size(max = 50)
     private String introduce;
 
+    @Size(max = 50)
     private String name;
 
     //bi-directional many-to-one association to ItemBank
@@ -37,6 +40,10 @@ public class Team implements Serializable {
     //bi-directional many-to-one association to Student
     @OneToMany(mappedBy = "team", fetch = FetchType.LAZY)
     private Set<Student> students;
+    
+    //bi-directional many-to-one association to News
+    @OneToMany(mappedBy = "team", fetch = FetchType.LAZY)
+    private Set<News> informations;
 
     //bi-directional many-to-one association to Teacher
     @ManyToOne
@@ -123,6 +130,28 @@ public class Team implements Serializable {
 
     public void setTeacher(Teacher teacher) {
         this.teacher = teacher;
+    }
+    
+    public Set<News> getInformations() {
+        return this.informations;
+    }
+
+    public void setInformations(Set<News> informations) {
+        this.informations = informations;
+    }
+
+    public News addInformation(News information) {
+        getInformations().add(information);
+        information.setTeam(this);
+
+        return information;
+    }
+
+    public News removeInformation(News information) {
+        getInformations().remove(information);
+        information.setTeam(null);
+
+        return information;
     }
 
     @Override

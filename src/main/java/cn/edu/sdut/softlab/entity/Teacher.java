@@ -4,6 +4,7 @@ import java.io.Serializable;
 import javax.persistence.*;
 import java.math.BigInteger;
 import java.util.Set;
+import javax.validation.constraints.Size;
 
 /**
  * The persistent class for the teacher database table.
@@ -27,10 +28,13 @@ public class Teacher implements Serializable, User {
     private int id;
 
     @Column(name = "id_card")
+    @Size(max = 18)
     private String idCard;
 
+    @Size(max = 20)
     private String name;
 
+    @Size(max = 16)
     private String password;
 
     @Column(name = "teacher_num")

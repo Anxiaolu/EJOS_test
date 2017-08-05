@@ -4,7 +4,7 @@ import java.io.Serializable;
 import javax.persistence.*;
 import java.math.BigInteger;
 import java.util.Set;
-import javax.enterprise.inject.Alternative;
+import javax.validation.constraints.Size;
 
 /**
  * The persistent class for the student database table.
@@ -13,13 +13,12 @@ import javax.enterprise.inject.Alternative;
 @Entity
 @Table(name = "student")
 @NamedQueries({
-    @NamedQuery(name = "Student.findAll", query = "SELECT s FROM Student s")
-    ,
-    @NamedQuery(name = "Student.findByStuNO", query = "SELECT s FROM Student s WHERE s.studentNum = :stuNO")
-    ,
-    @NamedQuery(name = "Student.findByStuNOAndPassword", query = "SELECT s FROM Student s WHERE s.studentNum = :stuNO and s.password = :password")
-    ,
-    @NamedQuery(name = "Student.findById", query = "SELECT s FROM Student s WHERE s.id = :id")})
+    @NamedQuery(name = "Student.findAll", query = "SELECT s FROM Student s"),
+    @NamedQuery(name = "Student.findByStuNO", query = "SELECT s FROM Student s WHERE s.studentNum = :stuNO"),
+    @NamedQuery(name = "Student.findByName", query = "SELECT s FROM Student s WHERE s.name = :name"),
+    @NamedQuery(name = "Student.findByStuNOAndPassword", query = "SELECT s FROM Student s WHERE s.studentNum = :stuNO and s.password = :password"),
+    @NamedQuery(name = "Student.findById", query = "SELECT s FROM Student s WHERE s.id = :id"),
+    @NamedQuery(name = "Student.findByTeam",query = "SELECT s FROM Student s WHERE s.team.id = :stu_team_id")})
 public class Student implements Serializable, User {
 
     private static final long serialVersionUID = 1L;
@@ -30,10 +29,13 @@ public class Student implements Serializable, User {
     private int id;
 
     @Column(name = "id_card")
+    @Size(max = 18)
     private String idCard;
 
+    @Size(max = 20)
     private String name;
 
+    @Size(max = 16)
     private String password;
 
     @Column(name = "student_num")
@@ -42,10 +44,6 @@ public class Student implements Serializable, User {
     //bi-directional many-to-one association to Achievement
     @OneToMany(mappedBy = "student", fetch = FetchType.LAZY)
     private Set<Achievement> achievements;
-
-    //bi-directional many-to-one association to Information
-    @OneToMany(mappedBy = "student", fetch = FetchType.EAGER)
-    private Set<Information> informations;
 
     //bi-directional many-to-one association to Team
     @JoinColumn(name = "team_id", referencedColumnName = "id")
@@ -58,6 +56,15 @@ public class Student implements Serializable, User {
     public Student() {
     }
 
+    public Student(int id, String idCard, String name, String password, BigInteger studentNum, Team team) {
+        this.id = id;
+        this.idCard = idCard;
+        this.name = name;
+        this.password = password;
+        this.studentNum = studentNum;
+        this.team = team;
+    }
+    
     public Student(Team team) {
         this.team = team;
     }
@@ -122,28 +129,6 @@ public class Student implements Serializable, User {
         achievement.setStudent(null);
 
         return achievement;
-    }
-
-    public Set<Information> getInformations() {
-        return this.informations;
-    }
-
-    public void setInformations(Set<Information> informations) {
-        this.informations = informations;
-    }
-
-    public Information addInformation(Information information) {
-        getInformations().add(information);
-        information.setStudent(this);
-
-        return information;
-    }
-
-    public Information removeInformation(Information information) {
-        getInformations().remove(information);
-        information.setStudent(null);
-
-        return information;
     }
 
     public Team getTeam() {

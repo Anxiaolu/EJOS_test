@@ -2,6 +2,7 @@ package cn.edu.sdut.softlab.entity;
 
 import java.io.Serializable;
 import javax.persistence.*;
+import javax.validation.constraints.Size;
 
 /**
  * The persistent class for the admin database table.
@@ -27,14 +28,17 @@ public class Admin implements Serializable, User {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ADMIN_ID_GENERATOR")
     private int id;
 
+    @Size(max = 20)
     private String email;
 
+    @Size(max = 20)
     private String name;
 
+    @Size(max = 16)
     private String password;
-    
+
     //@Transient
-    public  String level;
+    public String level;
 
     public Admin() {
     }
@@ -72,12 +76,12 @@ public class Admin implements Serializable, User {
     }
 
     @Override
-    public void setLevel(String level){
+    public void setLevel(String level) {
         this.level = level;
     }
-    
+
     @Override
-    public String getLevel(){
+    public String getLevel() {
         return this.level;
     }
 
@@ -85,5 +89,5 @@ public class Admin implements Serializable, User {
     public String toString() {
         return "Admin{" + "id=" + id + ", email=" + email + ", name=" + name + ", password=" + password + ", level=" + level + '}';
     }
-    
+
 }
