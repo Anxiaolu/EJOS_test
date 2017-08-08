@@ -41,10 +41,6 @@ public class Team implements Serializable {
     @OneToMany(mappedBy = "team", fetch = FetchType.LAZY)
     private Set<Student> students;
     
-    //bi-directional many-to-one association to News
-    @OneToMany(mappedBy = "team", fetch = FetchType.LAZY)
-    private Set<News> informations;
-
     //bi-directional many-to-one association to Teacher
     @ManyToOne
     private Teacher teacher;
@@ -132,31 +128,9 @@ public class Team implements Serializable {
         this.teacher = teacher;
     }
     
-    public Set<News> getInformations() {
-        return this.informations;
-    }
-
-    public void setInformations(Set<News> informations) {
-        this.informations = informations;
-    }
-
-    public News addInformation(News information) {
-        getInformations().add(information);
-        information.setTeam(this);
-
-        return information;
-    }
-
-    public News removeInformation(News information) {
-        getInformations().remove(information);
-        information.setTeam(null);
-
-        return information;
-    }
-
     @Override
     public String toString() {
-        return "team[Id=" + id + "]";
+        return "Team{" + "id=" + id + ", introduce=" + introduce + ", name=" + name + '}';
     }
 
     /*

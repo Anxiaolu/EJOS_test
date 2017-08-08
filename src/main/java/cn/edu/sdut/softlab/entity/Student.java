@@ -44,9 +44,12 @@ public class Student implements Serializable, User {
     //bi-directional many-to-one association to Achievement
     @OneToMany(mappedBy = "student", fetch = FetchType.LAZY)
     private Set<Achievement> achievements;
+    
+    //bi-directional many-to-one association to News
+    @OneToMany(mappedBy = "student", fetch = FetchType.LAZY)
+    private Set<News> newses;
 
     //bi-directional many-to-one association to Team
-    @JoinColumn(name = "team_id", referencedColumnName = "id")
     @ManyToOne
     private Team team;
     
@@ -129,6 +132,28 @@ public class Student implements Serializable, User {
         achievement.setStudent(null);
 
         return achievement;
+    }
+    
+    public Set<News> getInformations() {
+        return this.newses;
+    }
+
+    public void setInformations(Set<News> newses) {
+        this.newses = newses;
+    }
+
+    public News addInformation(News information) {
+        getInformations().add(information);
+        information.setStudent(this);
+
+        return information;
+    }
+
+    public News removeInformation(News information) {
+        getInformations().remove(information);
+        information.setStudent(null);
+
+        return information;
     }
 
     public Team getTeam() {

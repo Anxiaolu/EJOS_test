@@ -13,7 +13,6 @@ import javax.validation.constraints.Size;
 @Table(name = "news")
 @NamedQueries({@NamedQuery(name = "News.findAll", query = "SELECT n FROM News n"),
                 @NamedQuery(name = "News.findById",query = "SELECT n FROM News n WHERE n.id = :id"),
-                @NamedQuery(name = "News.findByTeamId",query = "SELECT n FROM News n WHERE n.team.id = :team_id"),
                 @NamedQuery(name = "News.findByStatus",query = "SELECT n FROM News n WHERE n.status = :status")})
 public class News implements Serializable {
 
@@ -24,7 +23,7 @@ public class News implements Serializable {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "INFORMATION_ID_GENERATOR")
     private int id;
 
-    @Lob
+    @Size(max = 200)
     private String content;
 
     private String level;
@@ -35,13 +34,12 @@ public class News implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date time;
 
-    @Lob
+    @Size(max = 50)
     private String title;
 
     //bi-directional many-to-one association to Student
-    @JoinColumn(name = "team_id", referencedColumnName = "id")
     @ManyToOne
-    private Team team;
+    private Student student;
 
     public News() {
     }
@@ -94,12 +92,17 @@ public class News implements Serializable {
         this.title = title;
     }
 
-    public Team getTeam() {
-        return this.team;
+    public Student getStudent() {
+        return student;
     }
 
-    public void setTeam(Team team) {
-        this.team = team;
+    public void setStudent(Student student) {
+        this.student = student;
+    }
+
+    @Override
+    public String toString() {
+        return "News{" + "id=" + id + ", content=" + content + ", level=" + level + ", status=" + status + ", time=" + time + ", title=" + title +'}';
     }
 
 }
