@@ -11,9 +11,14 @@ import javax.validation.constraints.Size;
  */
 @Entity
 @Table(name = "news")
-@NamedQueries({@NamedQuery(name = "News.findAll", query = "SELECT n FROM News n"),
-                @NamedQuery(name = "News.findById",query = "SELECT n FROM News n WHERE n.id = :id"),
-                @NamedQuery(name = "News.findByStatus",query = "SELECT n FROM News n WHERE n.status = :status")})
+@NamedQueries({
+    @NamedQuery(name = "News.findAll", query = "SELECT n FROM News n")
+    ,
+                @NamedQuery(name = "News.findById", query = "SELECT n FROM News n WHERE n.id = :id")
+    ,
+                @NamedQuery(name = "News.findByStuId", query = "SELECT n FROM News n WHERE n.student.id = :stu_id")
+    ,
+                @NamedQuery(name = "News.findByStatus", query = "SELECT n FROM News n WHERE n.status = :status")})
 public class News implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -27,12 +32,15 @@ public class News implements Serializable {
     private String content;
 
     private String level;
-    
+
     @Size(max = 20)
     private String status;
 
     @Temporal(TemporalType.TIMESTAMP)
-    private Date time;
+    private Date starttime;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date endtime;
 
     @Size(max = 50)
     private String title;
@@ -76,12 +84,20 @@ public class News implements Serializable {
         this.status = status;
     }
 
-    public Date getTime() {
-        return this.time;
+    public Date getStarttime() {
+        return starttime;
     }
 
-    public void setTime(Date time) {
-        this.time = time;
+    public void setStarttime(Date starttime) {
+        this.starttime = starttime;
+    }
+
+    public Date getEndtime() {
+        return endtime;
+    }
+
+    public void setEndtime(Date endtime) {
+        this.endtime = endtime;
     }
 
     public String getTitle() {
@@ -102,7 +118,7 @@ public class News implements Serializable {
 
     @Override
     public String toString() {
-        return "News{" + "id=" + id + ", content=" + content + ", level=" + level + ", status=" + status + ", time=" + time + ", title=" + title +'}';
+        return "News{" + "id=" + id + ", content=" + content + ", level=" + level + ", status=" + status + ", starttime=" + starttime + ", endtime=" + endtime + ", title=" + title + ", student=" + student + '}';
     }
 
 }
