@@ -6,6 +6,15 @@
 package cn.edu.sdut.softlab.controller;
 
 import cn.edu.sdut.softlab.entity.News;
+import cn.edu.sdut.softlab.entity.Record;
+import cn.edu.sdut.softlab.entity.Student;
+import cn.edu.sdut.softlab.service.NewsFacade;
+import cn.edu.sdut.softlab.service.QuestionFacade;
+import cn.edu.sdut.softlab.service.RecordFacade;
+import cn.edu.sdut.softlab.service.StudentFacade;
+import cn.edu.sdut.softlab.service.TeamFacade;
+import cn.edu.sdut.softlab.util.DateUtil;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -39,6 +48,27 @@ public class NewsController {
     @Inject
     FacesContext facesContext;
     
+    @Inject
+    DateUtil dateUtil;
+    
+    @Inject
+    TeamFacade teamService;
+    
+    @Inject
+    QuestionFacade questionService;
+    
+    @Inject
+    RecordFacade recordService;
+    
+    @Inject
+    NewsFacade newsService;
+    
+    @Inject
+    StudentFacade studentService;
+    
+    @Inject
+    LoginController loginController;
+    
     private News currentnews = new News();
 
     public News getCurrentnews() {
@@ -60,13 +90,44 @@ public class NewsController {
         }
     }
     
-    public void addSingleNews() throws Exception{
-        currentnews.setStatus("未完成");
+    /**
+     * 根绝登录的用户身份,返回对应的消息数量
+     * @return 
+     */
+    public Integer getNewsNum(){
+        Student loginStu = studentService.findStudentByName(loginController.getCurrentUser().getName());
+        List<News> newss = newsService.getNewsByStuId(loginStu.getId());
+        return newss.size();
+    }
+    
+    public List<News> getNewsByStu(){
+        Student loginStu = studentService.findStudentByName(loginController.getCurrentUser().getName());
+        return newsService.getNewsByStuId(loginStu.getId());
+    }
+    
+    /**
+     * 根据Record记录中未通过的记录向对应学生发送消息
+     * @throws Exception 
+     */
+    public void addNewsByRecord() throws Exception {
+        //Integer stu_id = 1;
         try {
             utx.begin();
-            em.persist(currentnews);
-            facesContext.addMessage(null, new FacesMessage("添加成功"));
-        }finally{
+            News currentNews = new News();
+            currentNews.setStudent(studentService.findByStuId(1));
+            currentNews.setContent("您还有未完成的题目,请按时完成!");
+            currentNews.setStarttime(dateUtil.getNowDate());
+            currentnews.setStatus("未完成");
+            List<Record> records = recordService.findRecordsByStuIdAndStatus("未完成", 1);
+            logger.info("记录");
+            for (Record record : records) {
+                currentNews.setStarttime(new Date());
+                currentNews.setEndtime(questionService.findQuestionsById(record.getQuestionId()).getDeadline());
+                System.out.println(currentNews.toString() + "111111");
+                newsService.create(currentNews);
+            }
+        }
+        finally{
             utx.commit();
         }
     }
