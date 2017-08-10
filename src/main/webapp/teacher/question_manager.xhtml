@@ -3,10 +3,9 @@
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
-      xmlns:p="http://primefaces.org/ui"
-      xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+      xmlns:p="http://primefaces.org/ui">
     <f:view>
-        <f:event type="preRenderView" listener="#{login.checkAdminUser}"/>
+        <f:event type="preRenderView" listener="#{login.checkLogin}" />
         <h:head>
             <meta charset="utf-8"/>
             <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
@@ -14,10 +13,9 @@
             <link href="../assets/bootstrap/css/bootstrap.min.css" rel="stylesheet"/>
             <link href="../assets/css/datepicker3.css" rel="stylesheet"/>
             <link href="../assets/css/styles.css" rel="stylesheet"/>
-            <link rel="stylesheet" href="../assets/css/style.css" />
             <!--[if lt IE 9]>
-            <script src="../js/html5shiv.js"></script>
-            <script src="../js/respond.min.js"></script>
+            <script src="js/html5shiv.js"></script>
+            <script src="js/respond.min.js"></script>
             <![endif]-->
         </h:head>
         <h:body>
@@ -37,7 +35,7 @@
                                 <ul class="dropdown-menu" role="menu">
                                     <li><a href="#"><span class="glyphicon glyphicon-user"></span> Profile</a></li>
                                     <li><a href="Stuff_modify.jsf"><span class="glyphicon glyphicon-cog"></span> Settings</a></li>
-                                    <li style="padding-left: 20px;"><h:form><p:commandButton action="#{login.logout}" value="LogOut" styleClass="logout"><span class="glyphicon glyphicon-log-out"></span> </p:commandButton></h:form></li>
+                                    <li style="padding-left: 20px;"><h:form><p:commandButton action="#{login.logout}" value="LogOut" styleClass="logout"><span class="glyphicon glyphicon-log-out"></span></p:commandButton></h:form></li>
                                 </ul>
                             </li>
                         </ul>
@@ -123,119 +121,113 @@
                         <li class="active">Dashboard</li>
                     </ol>
                 </div><!--/.row-->
-                <div class="row">
-                    <div class="col-lg-12">
-                        <h1 class="page-header">Dashboard</h1>
-                    </div>  
-                </div><!--/.row-->
-
+                <p:messages/>
                 <div class="row">
                     <!-- Nav tabs -->
                     <ul class="nav nav-tabs" role="tablist">
-                        <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">News List</a></li>
-                        <li role="presentation"><a href="#addSingle" aria-controls="profile" role="tab" data-toggle="tab">Add Single News</a></li>
+                        <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">Question List</a></li>
+                        <li role="presentation"><a href="#addSingle" aria-controls="profile" role="tab" data-toggle="tab">Add Single Question</a></li>
                         <li role="presentation"><a href="#delete" aria-controls="messages" role="tab" data-toggle="tab">export</a></li>
                     </ul>
-
-                    <p:messages/>
-                    <div class="tab-content"> 
+                    <div class="tab-content">
                         <div class="col-xs-12 col-md-12 col-lg-12 tab-pane" role="tablepanel" id="home">
-                            <h:form id="form">
-                                <p:growl id="msgs" showDetail="true"/>
-                                <h:messages/>
-                                <p:dataTable id="dataTable" var="news" value="#{newsController.all}" editable="true" style="margin-bottom:20px">
-                                    <f:facet name="header">
-                                        Row Editing
-                                    </f:facet>
-
-                                    <p:ajax event="rowEdit" listener="#{newsController.onRowEdit}" update=":form:msgs" />
-                                    <p:ajax event="rowEditCancel" listener="#{newsController.onRowCancel}" update=":form:msgs" />
-
-                                    <p:column headerText="ID" rendered="false">
-                                        <p:cellEditor>
-                                            <f:facet name="output"><h:outputText value="#{mews.id}" /></f:facet>
-                                            <f:facet name="input"><p:inputText id="modelInput" value="#{newsController.currentnews.id = news.id}" style="width:100%"/></f:facet>
-                                        </p:cellEditor>
-                                    </p:column>
-
-                                    <p:column headerText="NewsTitle">
-                                        <p:cellEditor>
-                                            <f:facet name="output"><h:outputText value="#{news.title}" /></f:facet>
-                                            <f:facet name="input"><p:inputText value="#{newsController.currentnews.title}" style="width:100%"/></f:facet>
-                                        </p:cellEditor>
-                                    </p:column>
-
-                                    <p:column headerText="Content">
-                                        <p:cellEditor>
-                                            <f:facet name="output"><h:outputText value="#{news.content}" /></f:facet>
-                                            <f:facet name="input"><p:inputTextarea placeholder="#{news.content}" value="#{newsController.currentnews.content}" maxlength="50" 
-                                                                                   counterTemplate="{0} characters remaining." style="width:100%"/></f:facet>
-                                        </p:cellEditor>
-                                    </p:column>
-
-                                    <p:column headerText="Time">
-                                        <p:cellEditor>
-                                            <f:facet name="output"><h:outputText value="#{news.endtime}" /></f:facet>
-                                            <f:facet name="input"><p:inputMask value="#{newsController.currentnews.endtime}" mask="9999-99-99 99:99:99" 
-                                                                               converter="#{dateConverter}" style="width:100%"/></f:facet>
-                                        </p:cellEditor>
-                                    </p:column>
-
-                                    <p:column headerText="status">
-                                        <p:cellEditor>
-                                            <f:facet name="output"><h:outputText value="#{news.status}" /></f:facet>
-                                            <f:facet name="input">
-                                                <h:selectOneMenu value="#{newsController.currentnews.status}" required="true" style="width:100%">
-                                                    <f:selectItem itemLabel="已完成" itemValue="已完成" />
-                                                    <f:selectItem itemLabel="未完成" itemValue="未完成" />
-                                                </h:selectOneMenu>
-                                            </f:facet>
-                                        </p:cellEditor>
-                                    </p:column>
-
-                                    
-
-                                    <p:column style="width:64px">
-                                        <p:rowEditor />
-                                    </p:column>
-                                    <p:column style="width: 64px" headerText="Delete">
-                                        <h:commandButton action="#{newsController.delete(news)}" value="Delete"/>
-                                    </p:column>
-                                    <f:facet name="footer">
-                                        In total there are #{fn:length(newsController.all)} Items.
-                                    </f:facet>
-                                </p:dataTable>
-                                <p:blockUI block="dataTable" trigger="dataTable">
-                                    LOADING...<br />
-                                    <p:graphicImage value="../assets/img/loading/loading.gif" />
-                                </p:blockUI>
-                            </h:form>
-                        </div>
-
-                        <div class="col-xs-12 col-md-12 col-lg-12 tab-pane" role="tablepanel" id="addSingle">
-                            <div class="col-sm-6 col-sm-offset-3 form-box">
-                                <div class="form-bottom">   
-                                    <h:form role="form" class="login-form"
-                                            id="loginForm">
-                                        <h:commandButton id="addteacher" value="Add Single Student"
-                                                         action="#{newsController.addNewsByRecord}"
-                                                         styleClass="button"/>
-                                    </h:form>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xs-12 col-md-12 col-lg-12 tab-pane" role="tablepanel" id="delete">
                             <h:form>
-                                <h:outputText value="根据班级导出学生信息"/>
-                                <h:selectOneMenu value="#{stuController.tempTeamId}" style="width:100%">
-                                    <f:selectItem itemLabel="--请选择要导出的班级--"/>
-                                    <f:selectItems value="#{teamController.all}" var="team"
-                                                   itemValue="#{team.id}" itemLabel="#{team.name}"/>
-                                </h:selectOneMenu>
-                                <h:outputText value="请输入要导出Home目录的哪个目录下"/>
-                                <h:inputText value="#{stuController.path}"/>
-                                <h:commandButton action="#{stuController.getStudentsByTeam()}" value="Export"/>
+                                <p:dataTable var="ques" value="#{questionController.findAll()}" widgetVar="questionsTable"
+                                             emptyMessage="No question found with given criteria" filteredValue="#{questionController.filteredQuestions}">
+
+                                    <f:facet name="header">
+                                        <p:outputPanel>
+                                            <h:outputText value="Search all fields:" />
+                                            <p:inputText id="globalFilter" onkeyup="PF('questionsTable').filter()" style="width:150px" placeholder="Enter keyword"/>
+                                        </p:outputPanel>
+                                    </f:facet>
+
+                                    <p:column filterBy="#{ques.id}" headerText="Id" footerText="contains" filterMatchMode="contains">
+                                        <h:outputText value="#{ques.id}" />
+                                    </p:column>
+
+                                    <p:column filterBy="#{ques.introduce}" headerText="Introduce" footerText="contains" filterMatchMode="contains">
+                                        <h:outputText value="#{ques.introduce}" />
+                                    </p:column>
+                                    
+                                    <p:column filterBy="#{ques.question}" headerText="Question" footerText="contains" filterMatchMode="contains">
+                                        <h:outputText value="#{ques.question}" />
+                                    </p:column>
+
+                                    <p:column filterBy="#{ques.team.id}" headerText="Team" footerText="exact" filterMatchMode="exact">
+                                        <f:facet name="filter">
+                                            <p:selectOneMenu onchange="PF('questionsTable').filter()" >
+                                                <f:selectItem itemLabel="Select One" itemValue="#{null}" noSelectionOption="true" />
+                                                <f:selectItems value="#{teamController.all}" var="team" itemValue="#{team.id}" itemLabel="#{team.name}"/>
+                                            </p:selectOneMenu>
+                                        </f:facet>
+                                        <h:outputText value="#{ques.team.name}" />
+                                    </p:column>
+
+                                    <p:column filterBy="#{ques.deadline}" headerText="EndTime" footerText="contains" 
+                                              filterMatchMode="contains">
+                                        <h:outputText value="#{ques.deadline}">
+                                            <f:convertDateTime pattern="yyyy-MM-dd" type="currency"/>
+                                        </h:outputText> 
+                                    </p:column>
+                                </p:dataTable>
                             </h:form>
+                        </div>
+                        <div class="col-xs-12 col-md-12 col-lg-12 tab-pane" role="tablepanel" id="addSingle">
+                            <div class="form-bottom">   
+                                <h:form role="form" class="login-form"
+                                        id="loginForm">
+                                    <h:panelGrid columns="1">
+                                        <div class="form-group">
+                                            <label>介绍:</label>
+                                            <p:inputText value="#{questionController.currentQuestion.introduce}" required="true" 
+                                                         requiredMessage="请输入要添加的问题的介绍"/>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>题目内容:</label>
+                                            <p:inputText value="#{questionController.currentQuestion.question}" rendered="true" 
+                                                         requiredMessage="请输入问题内容"/>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>题目路径:</label>
+                                            <p:inputText value="#{questionController.currentQuestion.path}" rendered="true" 
+                                                         requiredMessage="请输入题目路径"/>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>难度:</label>
+                                            <p:inputText value="#{questionController.currentQuestion.diffculty}" rendered="true" 
+                                                         requiredMessage="请输入题目难度"/>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>答案:</label>
+                                            <p:inputText value="#{questionController.currentQuestion.answer}" rendered="true" 
+                                                         requiredMessage="请输入题目答案"/>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>结果:</label>
+                                            <p:inputText value="#{questionController.currentQuestion.result}" rendered="true" 
+                                                         requiredMessage="请输入题目结果"/>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>请选择班级:</label>
+                                            <h:selectOneMenu value="#{questionController.currentQuestion.team.id}" converter="#{teamConverter}"
+                                                             required="true" style="width:200px">
+                                                <f:selectItems value="#{teamController.all}" var="team" itemLabel="#{team.name}" itemValue="#{team.id}" />
+                                            </h:selectOneMenu>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>截止时间:</label>
+                                            <p:inputMask value="#{questionController.currentQuestion.deadline}" mask="9999-99-99 99:99:99"
+                                                         rendered="true" requiredMessage="请输入题目截止时间">
+                                                <f:converter converterId="javax.faces.DateTime"/>
+                                            </p:inputMask>
+                                        </div>
+                                    </h:panelGrid>
+                                    <h:commandButton id="addquestion" value="Add Single Question"
+                                                     action="#{questionController.addQuestion}"
+                                                     styleClass="button"/>
+                                </h:form>
+                            </div>
                         </div>
                     </div>
                 </div><!--/.row-->
@@ -248,11 +240,6 @@
             <script src="../assets/js/easypiechart-data.js"></script>
             <script src="../assets/bootstrap/js/bootstrap-datepicker.js"></script>
             <script>
-                $('#myTabs a').click(function (e) {
-                    e.preventDefault()
-                    $(this).tab('show')
-                });
-
                 $('#calendar').datepicker({
                 });
 

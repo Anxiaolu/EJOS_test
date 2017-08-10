@@ -3,7 +3,8 @@
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
-      xmlns:p="http://primefaces.org/ui">
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
     <f:view>
         <f:event type="preRenderView" listener="#{login.checkLogin}" />
         <h:head>
@@ -17,6 +18,17 @@
             <script src="js/html5shiv.js"></script>
             <script src="js/respond.min.js"></script>
             <![endif]-->
+            <style>
+                ol{
+                    padding: 10px 0px 10px 20px;
+                }
+                ol li{
+                    list-style: none;
+                    line-height: 34px;
+                    margin-top: 5px;
+                    border-bottom: solid #cdcdcd 1px;
+                }
+            </style>
         </h:head>
         <h:body>
             <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
@@ -123,12 +135,25 @@
                 </div><!--/.row-->
                 <h:messages/>
                 <div class="row">
+                    <h:form>
+                        <p:dataList value="#{newsController.newsByStu}" var="news" type="ordered">
+                                <f:facet name="header">
+                                    消息列表
+                                </f:facet>
+                                <div class="media-left media-middle">
+                                </div>
+                                <div class="media-body">
+                                    <h4 class="media-heading">#{news.title}</h4>
+                                    <p>${news.content}  </p>
+                                    <span>截止时间:#{news.endtime}</span>
+                                </div>
+                        </p:dataList>
+                    </h:form>
                 </div><!--/.row-->
             </div>	<!--/.main-->
             <script src="assets/js/jquery-1.11.1.min.js"></script>
             <script src="assets/bootstrap/js/bootstrap.min.js"></script>
             <script src="assets/js/chart.min.js"></script>
-            <script src="assets/js/chart-data.js"></script>
             <script src="assets/js/easypiechart.js"></script>
             <script src="assets/js/easypiechart-data.js"></script>
             <script src="assets/bootstrap/js/bootstrap-datepicker.js"></script>
