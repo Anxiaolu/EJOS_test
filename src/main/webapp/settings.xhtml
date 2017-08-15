@@ -28,20 +28,55 @@
                             <span class="icon-bar"></span>
                             <span class="icon-bar"></span>
                         </button>
+                        <button class="btn btn-primary pull-right" style="margin-top: 7px;" data-toggle="modal" data-target="#myModal" type="button">
+                            Messages <span class="badge">#{newsController.newsNum}</span>
+                        </button>
                         <a class="navbar-brand" href="#"><span>Lumino</span>Admin</a>
                         <ul class="user-menu">
                             <li class="dropdown pull-right">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-user"></span> #{login.currentUser.name} <span class="caret"></span></a>
                                 <ul class="dropdown-menu" role="menu">
-                                    <li><a href="student/student_modify.jsf"><span class="glyphicon glyphicon-user"></span> Profile</a></li>
-                                    <li><a href="Stuff_modify.jsf"><span class="glyphicon glyphicon-cog"></span> Settings</a></li>
-                                    <li style="padding-left: 20px;"><h:form><p:commandButton action="#{login.logout}" value="LogOut" styleClass="logout"><span class="glyphicon glyphicon-log-out"></span> </p:commandButton></h:form></li>
+                                    <li><a href="modify_own.jsf"><span class="glyphicon glyphicon-user"></span> Profile</a></li>
+                                    <li><a href="settings.jsf"><span class="glyphicon glyphicon-cog"></span> Settings</a></li>
+                                    <li style="padding-left: 20px;">
+                                        <h:form>
+                                            <p:commandButton action="#{login.logout}" value="LogOut" styleClass="logout">
+                                                <span class="glyphicon glyphicon-log-out"></span> 
+                                            </p:commandButton>
+                                        </h:form>
+                                    </li>
                                 </ul>
                             </li>
                         </ul>
                     </div>
                 </div><!-- /.container-fluid -->
             </nav>
+            <!-- Modal -->
+            <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="myModalLabel">你有未完成的作业!</h4>
+                        </div>
+                        <div class="modal-body">
+                            <h:form id="form">
+                                <p:accordionPanel value="#{newsController.newsByStu}" var="news">
+                                    <p:tab>
+                                        <h:panelGrid columns="2" cellpadding="10">
+                                            <h:outputText value="#{news.content}" />
+                                        </h:panelGrid>
+                                    </p:tab>
+                                </p:accordionPanel>
+                            </h:form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary"><a href="news_list.jsf" style="color: #ffffff;">More</a></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div id="sidebar-collapse" class="col-sm-3 col-lg-2 sidebar">
                 <form role="search">
                     <div class="form-group">
