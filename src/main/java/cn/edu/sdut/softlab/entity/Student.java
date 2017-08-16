@@ -25,7 +25,7 @@ public class Student implements Serializable, User {
 
     @Id
     @SequenceGenerator(name = "STUDENT_ID_GENERATOR")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "STUDENT_ID_GENERATOR")
+    @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "STUDENT_ID_GENERATOR")
     private int id;
 
     @Column(name = "id_card")

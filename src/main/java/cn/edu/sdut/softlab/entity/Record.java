@@ -19,15 +19,16 @@ import java.util.Date;
     ,
                 @NamedQuery(name = "Record.findByStuId", query = "SELECT r FROM Record r WHERE r.studentId = :stu_id")
     ,
-                @NamedQuery(name = "Record.findByStuIdAndStatus", query = "SELECT r FROM Record r WHERE r.studentId = :stu_id AND r.status = :status"),
-                @NamedQuery(name = "Record.findByStuIdAndQuestion",query = "SELECT r FROM Record r WHERE r.questionId = questionId AND r.studentId = stu_id")})
+                @NamedQuery(name = "Record.findByStuIdAndStatus", query = "SELECT r FROM Record r WHERE r.studentId = :stu_id AND r.status = :status")
+    ,
+                @NamedQuery(name = "Record.findByStuIdAndQuestion", query = "SELECT r FROM Record r WHERE r.questionId = questionId AND r.studentId = stu_id")})
 public class Record implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     @Id
     @SequenceGenerator(name = "RECORD_ID_GENERATOR")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "RECORD_ID_GENERATOR")
+    @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "RECORD_ID_GENERATOR")
     private int id;
 
     @Column(name = "question_id")

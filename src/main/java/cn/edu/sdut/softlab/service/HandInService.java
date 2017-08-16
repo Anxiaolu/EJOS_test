@@ -32,7 +32,7 @@ import javax.persistence.EntityManager;
 
 import cn.edu.sdut.softlab.controller.ExpReport;
 import cn.edu.sdut.softlab.entity.Achievement;
-import cn.edu.sdut.softlab.entity.ItemBank;
+import cn.edu.sdut.softlab.entity.Question;
 import cn.edu.sdut.softlab.entity.Student;
 
 /**
@@ -67,7 +67,7 @@ public class HandInService extends AbstractFacade<Achievement> {
 	
 	@RequestScoped
 	@ManagedProperty(value = "#{questionManager.questions}")
-	private List<ItemBank> questions;
+	private List<Question> questions;
 
 
 	@Inject
@@ -81,7 +81,7 @@ public class HandInService extends AbstractFacade<Achievement> {
 	private Achievement achie;
 	/*
 	 * int id; String answer; String answerPath; String result; int score;
-	 * ItemBank itemBank; Student student;
+	 * Question itemBank; Student student;
 	 */
 
 	/**

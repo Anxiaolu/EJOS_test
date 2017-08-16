@@ -7,6 +7,7 @@ package cn.edu.sdut.softlab.service;
 
 import cn.edu.sdut.softlab.entity.News;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import javax.faces.bean.ApplicationScoped;
 import javax.inject.Named;
@@ -39,6 +40,12 @@ public class NewsFacade extends AbstractFacade<News>{
         Map<String, Object> parameters = new HashMap<>(0);
         parameters.put("teamId", team_id);
         return findSingleByNamedQuery("News.findByTeamId", parameters, News.class).get();
+    }
+    
+    public List<News> getNewsByStuId(Integer stu_id){
+        Map<String, Object> parameters = new HashMap<>(0);
+        parameters.put("stu_id", stu_id);
+        return findByNamedQuery("News.findByStuId", parameters);
     }
     
 }

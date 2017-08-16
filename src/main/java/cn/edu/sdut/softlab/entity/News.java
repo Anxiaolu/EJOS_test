@@ -25,7 +25,7 @@ public class News implements Serializable {
 
     @Id
     @SequenceGenerator(name = "INFORMATION_ID_GENERATOR")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "INFORMATION_ID_GENERATOR")
+    @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "INFORMATION_ID_GENERATOR")
     private int id;
 
     @Size(max = 200)

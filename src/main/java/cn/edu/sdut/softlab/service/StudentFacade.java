@@ -24,7 +24,6 @@ import javax.inject.Named;
 
 import cn.edu.sdut.softlab.entity.Student;
 import java.util.List;
-import org.hibernate.Session;
 
 /**
  * @author GaoYisheng 2017年5月10日 TODO
@@ -57,7 +56,7 @@ public class StudentFacade extends AbstractFacade<Student> {
     }
     
     /**
-     * 根据给定的班级信息查询学生(JPA)
+     * 根据给定的班级信息查询学生
      * @param stu_team_id
      * @return 
      */
@@ -73,14 +72,4 @@ public class StudentFacade extends AbstractFacade<Student> {
         return findSingleByNamedQuery("Student.findByName", parameters, Student.class).get();
     }
     
-    /**
-     * 使用hibernate的查询方式
-     * @param stu_team_id
-     * @return 
-     */
-    public List<Object[]> findByTeamHibernate(Integer stu_team_id){
-       Session session = this.getEm().unwrap(Session.class);
-       org.hibernate.query.Query query = session.createQuery("SELECT s FROM Student s WHERE team_id = '" + stu_team_id + "'");
-       return query.getResultList();
-    }
 }

@@ -6,6 +6,7 @@
 package cn.edu.sdut.softlab.controller;
 
 import cn.edu.sdut.softlab.entity.Team;
+import cn.edu.sdut.softlab.qualifiers.AdminAudit;
 import cn.edu.sdut.softlab.service.TeamFacade;
 import java.util.List;
 import javax.enterprise.context.RequestScoped;
@@ -13,7 +14,6 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.criteria.CriteriaQuery;
-import javax.transaction.SystemException;
 import javax.transaction.UserTransaction;
 
 /**
@@ -33,6 +33,16 @@ public class TeamController {
     @Inject
     TeamFacade teamService;
     
+    private Team currentTeam = new Team();
+
+    public Team getCurrentTeam() {
+        return currentTeam;
+    }
+
+    public void setCurrentTeam(Team currentTeam) {
+        this.currentTeam = currentTeam;
+    }
+    
     public List<Team> getAll() throws Exception{
         try {
             utx.begin();
@@ -43,5 +53,15 @@ public class TeamController {
         finally {
             utx.commit();
         }
+    }
+    
+    @AdminAudit
+    public void edit(){
+        
+    }
+    
+    @AdminAudit
+    public void add(){
+    
     }
 }

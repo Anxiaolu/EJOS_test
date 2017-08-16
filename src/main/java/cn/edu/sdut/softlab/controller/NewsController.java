@@ -6,6 +6,7 @@
 package cn.edu.sdut.softlab.controller;
 
 import cn.edu.sdut.softlab.entity.News;
+import cn.edu.sdut.softlab.entity.Question;
 import cn.edu.sdut.softlab.entity.Record;
 import cn.edu.sdut.softlab.entity.Student;
 import cn.edu.sdut.softlab.service.NewsFacade;
@@ -95,12 +96,22 @@ public class NewsController {
      * @return 
      */
     public Integer getNewsNum(){
+        if (loginController.getCurrentUser().getLevel().equals("Admin")) {
+            return 0;
+        }
         Student loginStu = studentService.findStudentByName(loginController.getCurrentUser().getName());
         List<News> newss = newsService.getNewsByStuId(loginStu.getId());
         return newss.size();
     }
     
+    /**
+     * 向前台返回消息列表
+     * @return 
+     */
     public List<News> getNewsByStu(){
+        if (loginController.getCurrentUser().getLevel().equals("Admin")) {
+            return null;
+        }
         Student loginStu = studentService.findStudentByName(loginController.getCurrentUser().getName());
         return newsService.getNewsByStuId(loginStu.getId());
     }
@@ -110,24 +121,47 @@ public class NewsController {
      * @throws Exception 
      */
     public void addNewsByRecord() throws Exception {
-        //Integer stu_id = 1;
         try {
             utx.begin();
-            News currentNews = new News();
-            currentNews.setStudent(studentService.findByStuId(1));
-            currentNews.setContent("您还有未完成的题目,请按时完成!");
-            currentNews.setStarttime(dateUtil.getNowDate());
-            currentnews.setStatus("未完成");
             List<Record> records = recordService.findRecordsByStuIdAndStatus("未完成", 1);
-            logger.info("记录");
             for (Record record : records) {
+                News currentNews = new News();
+                currentNews.setStudent(studentService.findByStuId(1));
+                currentNews.setContent("您还有未完成的题目,请按时完成!");
                 currentNews.setStarttime(new Date());
                 currentNews.setEndtime(questionService.findQuestionsById(record.getQuestionId()).getDeadline());
-                System.out.println(currentNews.toString() + "111111");
+                currentNews.setTitle(questionService.findQuestionsById(record.getQuestionId()).getQuestion() + "未完成");
+                currentNews.setStatus("未完成");
                 newsService.create(currentNews);
             }
         }
         finally{
+            utx.commit();
+        }
+    }
+    
+    /**
+     * 添加题目是自动调用
+     * @param currentQuestion
+     * @throws Exception 
+     */
+    public void addNewsBynewQuestion(Question currentQuestion) throws Exception{
+        try {
+            utx.begin();
+            News currentNews = new News();
+            currentNews.setStarttime(dateUtil.getNowDate());
+            currentNews.setContent("您有新的作业要完成!");
+            currentNews.setEndtime(currentQuestion.getDeadline());
+            currentNews.setTitle("有新的作业");
+            currentNews.setStatus("未完成");
+            List<Student> stus = studentService.findByTeam(currentQuestion.getTeam().getId());
+            for (Student stu : stus) {
+                currentNews.setStudent(stu);
+                logger.log(Level.INFO, "News Add Called: {0}", currentNews.toString());
+                em.persist(currentNews);
+                currentNews = null; 
+            }
+        }finally{
             utx.commit();
         }
     }

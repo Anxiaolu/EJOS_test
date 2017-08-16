@@ -24,7 +24,7 @@ public class Team implements Serializable {
 
     @Id
     @SequenceGenerator(name = "TEAM_ID_GENERATOR")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "TEAM_ID_GENERATOR")
+    @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "TEAM_ID_GENERATOR")
     private int id;
 
     @Size(max = 50)
@@ -33,9 +33,9 @@ public class Team implements Serializable {
     @Size(max = 50)
     private String name;
 
-    //bi-directional many-to-one association to ItemBank
+    //bi-directional many-to-one association to Question
     @OneToMany(mappedBy = "team", fetch = FetchType.LAZY)
-    private Set<ItemBank> itemBanks;
+    private Set<Question> itemBanks;
 
     //bi-directional many-to-one association to Student
     @OneToMany(mappedBy = "team", fetch = FetchType.LAZY)
@@ -76,22 +76,22 @@ public class Team implements Serializable {
         this.name = name;
     }
 
-    public Set<ItemBank> getItemBanks() {
+    public Set<Question> getItemBanks() {
         return this.itemBanks;
     }
 
-    public void setItemBanks(Set<ItemBank> itemBanks) {
+    public void setItemBanks(Set<Question> itemBanks) {
         this.itemBanks = itemBanks;
     }
 
-    public ItemBank addItemBank(ItemBank itemBank) {
+    public Question addItemBank(Question itemBank) {
         getItemBanks().add(itemBank);
         itemBank.setTeam(this);
 
         return itemBank;
     }
 
-    public ItemBank removeItemBank(ItemBank itemBank) {
+    public Question removeItemBank(Question itemBank) {
         getItemBanks().remove(itemBank);
         itemBank.setTeam(null);
 

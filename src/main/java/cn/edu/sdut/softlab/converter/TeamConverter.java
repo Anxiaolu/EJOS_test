@@ -3,7 +3,6 @@ package cn.edu.sdut.softlab.converter;
 import cn.edu.sdut.softlab.entity.Team;
 import cn.edu.sdut.softlab.service.TeamFacade;
 import java.io.Serializable;
-import java.util.logging.Logger;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.component.UIComponent;

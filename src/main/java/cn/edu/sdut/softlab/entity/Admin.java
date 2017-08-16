@@ -25,7 +25,7 @@ public class Admin implements Serializable, User {
 
     @Id
     @SequenceGenerator(name = "ADMIN_ID_GENERATOR")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ADMIN_ID_GENERATOR")
+    @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "ADMIN_ID_GENERATOR")
     private int id;
 
     @Size(max = 20)

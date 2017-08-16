@@ -11,24 +11,26 @@ import javax.validation.constraints.Size;
  *
  */
 @Entity
-@Table(name = "item_bank")
+@Table(name = "question")
 @NamedQueries({
-    @NamedQuery(name = "ItemBank.findAll", query = "SELECT i FROM ItemBank i")
+    @NamedQuery(name = "Question.findAll", query = "SELECT q FROM Question q")
     ,
-	@NamedQuery(name = "ItemBank.findByQuestion", query = "SELECT i FROM ItemBank i WHERE i.question = :question ")
+	@NamedQuery(name = "Question.findByQuestion", query = "SELECT q FROM Question q WHERE q.question = :question ")
     ,
-	@NamedQuery(name = "ItemBank.findById", query = "SELECT i FROM ItemBank i WHERE i.id = :id ")
+	@NamedQuery(name = "Question.findById", query = "SELECT q FROM Question q WHERE q.id = :id ")
     ,
-	@NamedQuery(name = "ItemBank.findByTeamId", query = "SELECT i FROM ItemBank i WHERE i.team.id = :teamId ")
+        @NamedQuery(name = "Question.findByName", query = "SELECT q FROM Question q WHERE q.introduce = :introduce ")
     ,
-	@NamedQuery(name = "ItemBank.findByTeam", query = "SELECT i FROM ItemBank i WHERE i.team = :team ")})
-public class ItemBank implements Serializable {
+	@NamedQuery(name = "Question.findByTeamId", query = "SELECT q FROM Question q WHERE q.team.id = :teamId ")
+    ,
+	@NamedQuery(name = "Question.findByTeam", query = "SELECT q FROM Question q WHERE q.team = :team ")})
+public class Question implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     @Id
     @SequenceGenerator(name = "ITEM_BANK_ID_GENERATOR")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ITEM_BANK_ID_GENERATOR")
+    @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "ITEM_BANK_ID_GENERATOR")
     private int id;
 
     @Size(max = 50)
@@ -60,7 +62,16 @@ public class ItemBank implements Serializable {
     @ManyToOne
     private Team team;
 
-    public ItemBank() {
+    public Question() {
+    }
+
+    public Question(Team team) {
+        this.team = team;
+    }
+
+    public Question(String questionName, Team team) {
+        this.question = questionName;
+        this.team = team;
     }
 
     public int getId() {
@@ -167,9 +178,10 @@ public class ItemBank implements Serializable {
 
     @Override
     public String toString() {
-        return question;
+        return "Question{" + "id=" + id + ", answer=" + answer + ", deadline=" + deadline + ", diffculty=" + diffculty
+                + ", introduce=" + introduce + ", path=" + path + ", question=" + question + ", result="
+                + result + ", time=" + time + ", team=" + team + '}';
     }
-
 
     /*
 	 * 重写equals必须注意： 1 自反性：对于任意的引用值x，x.equals(x)一定为true 2 对称性：对于任意的引用值x 和
@@ -196,11 +208,11 @@ public class ItemBank implements Serializable {
             return false;
         }
 
-        if (!(other instanceof ItemBank)) {
+        if (!(other instanceof Question)) {
             return false;
         }
 
-        final ItemBank s = (ItemBank) other;
+        final Question s = (Question) other;
 
         if (question == null) {
 
@@ -221,8 +233,6 @@ public class ItemBank implements Serializable {
         final int prime = 314159;
         int result = 271828;
         result = prime * result + ((question == null) ? 0 : question.hashCode());
-//		result = prime * result + ((name == null) ? 0 : name.hashCode());
         return result;
     }
-
 }

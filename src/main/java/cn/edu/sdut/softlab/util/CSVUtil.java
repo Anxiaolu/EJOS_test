@@ -24,14 +24,12 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.logging.Logger;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ApplicationScoped;
+import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.persistence.EntityManager;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
 import org.primefaces.model.UploadedFile;
 
 /**
@@ -52,14 +50,14 @@ public class CSVUtil {
     TeamFacade teamService;
     
     @Inject
-    EntityManager em;
-    
-    @Inject
     StringUtil stringUtil;
     
     @Inject
     StudentController stuContoller;
-
+    
+    @Inject
+    FacesContext facesContext;
+    
     /**
      *
      * @param file 上传的文件
@@ -85,12 +83,12 @@ public class CSVUtil {
                     System.out.println(stuInf[i]);
                 }
                 Student stu = createStudent(stuInf);
-                stuContoller.addSingleStudent(stu);
+                stuContoller.addSingleStudentByList(stu);
             }
             csvReader.close();
         } 
         finally{
-            
+            facesContext.addMessage(null, new FacesMessage("添加成功!"));
         }
     }
     
@@ -143,21 +141,21 @@ public class CSVUtil {
      * @return String[] 返回表头信息
      * @throws Exception 
      */
-    public Map<String,Object> getColumnName(String table_name) throws Exception {
-        String sql = "select * from " + table_name;
-        PreparedStatement ps = em.unwrap(java.sql.Connection.class).prepareStatement(sql);
-        ResultSet resultSet = ps.executeQuery();
-        ResultSetMetaData md = resultSet.getMetaData();
-        int columnCount = md.getColumnCount();
-        JSONArray columnName = new JSONArray();
-        for(int i = 1; i <= columnCount; i++)
-        {
-            JSONObject object = new JSONObject();
-            logger.info(md.getColumnName(i));
-            columnName.add(object);
-        }
-        return null;
-    }
+//    public Map<String,Object> getColumnName(String table_name) throws Exception {
+//        String sql = "select * from " + table_name;
+//        PreparedStatement ps = em.unwrap(java.sql.Connection.class).prepareStatement(sql);
+//        ResultSet resultSet = ps.executeQuery();
+//        ResultSetMetaData md = resultSet.getMetaData();
+//        int columnCount = md.getColumnCount();
+//        JSONArray columnName = new JSONArray();
+//        for(int i = 1; i <= columnCount; i++)
+//        {
+//            JSONObject object = new JSONObject();
+//            logger.info(md.getColumnName(i));
+//            columnName.add(object);
+//        }
+//        return null;
+//    }
     
 //    public void test(String table_name) throws SQLException{
 //        EntityManagerFactory emf = em.getEntityManagerFactory();
@@ -177,7 +175,6 @@ public class CSVUtil {
         stu.setPassword(stuInf[2]);
         stu.setIdCard(stuInf[3]);
         stu.setStudentNum(new BigInteger(stuInf[4]));
-        logger.info(stuInf[5] + "222");
         stu.setTeam(teamService.findByName(stuInf[5]));
         return stu;
     }

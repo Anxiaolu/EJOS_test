@@ -20,7 +20,7 @@ import java.util.logging.Level;
 public class LoginController implements Serializable {
 
     private static final long serialVersionUID = 7965455427888195913L;
-    
+
     private String level;
 
     public String getLevel() {
@@ -36,13 +36,13 @@ public class LoginController implements Serializable {
 
     @Inject
     private Credentials credentials;
-    
+
     @Inject
     FacesContext facesContext;
-    
+
     @Inject
     UserProducers userProducers;
-    
+
     private User currentUser;
 
     public User getCurrentUser() {
@@ -54,7 +54,7 @@ public class LoginController implements Serializable {
     }
 
     /**
-     * 
+     *
      * 处理登录逻辑.
      */
     public String login() {
@@ -64,15 +64,20 @@ public class LoginController implements Serializable {
         logger.log(Level.INFO, "Login:{0}", currentUser.toString());
         facesContext.addMessage(null, new FacesMessage("Welcome, " + currentUser.getName()));
         return "/home.xhtml?faces-redirect=true";
-    }   
-    
+    }
+
+    /**
+     * 系统登录初始化提示
+     */
     @PostConstruct
-    public void init(){
-        System.out.println("LoginController post construct......");
+    public void init() {
+        System.out.println("LoginController begin construct......");
     }
 
     /**
      * 处理退出登录逻辑.
+     *
+     * @return
      */
     public String logout() {
         logger.log(Level.INFO, "LogOut:{0}", currentUser.toString());
@@ -90,30 +95,61 @@ public class LoginController implements Serializable {
         return currentUser != null;//才看明白，null != null 没登录！
     }
 
+    public void redirectPath() {
+        FacesContext context = FacesContext.getCurrentInstance();
+        ConfigurableNavigationHandler handler = (ConfigurableNavigationHandler) context.getApplication().getNavigationHandler();
+        handler.performNavigation("home");
+    }
+    
+    /**
+     * 判断时候是登录状态浏览当前页面决定是否展示当前视图页面
+     * @param event 
+     */
     public void checkLogin(ComponentSystemEvent event) {
         if (!this.isLoggedIn()) {
-            logger.info(currentUser.toString());
-            FacesContext context = FacesContext.getCurrentInstance();
-            ConfigurableNavigationHandler handler = (ConfigurableNavigationHandler) context.getApplication().getNavigationHandler();
-            handler.performNavigation("login");
+            redirectPath();
         }
     }
     
-    public boolean isAdmin(){
+    /**
+     * 验证登录者是否为管理员决定是否展示视图页面
+     * @param event 
+     */
+    public void checkAdminUser(ComponentSystemEvent event) {
+        if (this.isLoggedIn()) {
+            if (!this.getCurrentUser().getLevel().equals("Admin")) {
+                redirectPath();
+            }
+        }
+    }
+    
+    /**
+     * 验证登录者是否为老师决定是否展示视图页面
+     * @param event 
+     */
+    public void checkTeacherUser(ComponentSystemEvent event) {
+        if (this.isLoggedIn()) {
+            if (!this.getCurrentUser().getLevel().equals("Teacher")) {
+                redirectPath();
+            }
+        }
+    }
+
+    public boolean isAdminUser() {
         return currentUser.getLevel().equals("Admin");
     }
-    
-    public boolean isTeacher(){
+
+    public boolean isTeacherUser() {
         return currentUser.getLevel().equals("Teacher");
     }
-    
-    public boolean isAdminOrTeacher(){
+
+    public boolean isAdminOrTeacherUser() {
         if (currentUser.getLevel().equals("Admin") || currentUser.getLevel().equals("Teacher")) {
             return true;
         }
         return false;
     }
-    
+
     /**
      * 异步根据前台绑定的根据登录学生的id查询,返回对应的
      *

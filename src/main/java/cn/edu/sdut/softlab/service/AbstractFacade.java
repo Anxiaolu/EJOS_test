@@ -35,8 +35,16 @@ import javax.persistence.criteria.Root;
 public abstract class AbstractFacade<T> {
 
     @Inject
-    EntityManager em;
+    private EntityManager em;
 
+    public EntityManager getEm() {
+        return em;
+    }
+
+    public void setEm(EntityManager em) {
+        this.em = em;
+    }
+    
     @Inject
     Logger log;
 
@@ -101,7 +109,20 @@ public abstract class AbstractFacade<T> {
         Query query = em.createQuery(cq);
         return ((Long) query.getSingleResult()).intValue();
     }
-
+    
+//    public int getCountByNamedQuery(String namedQueryName, Map<String, Object> parameters, Class<T> classT) {
+//        Set<Entry<String, Object>> rawParameters = parameters.entrySet();
+//        //TypedQuery<T> query = em.createNamedQuery(namedQueryName, classT);
+//        CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
+//        Root<T> rt = cq.from(entityClass);
+//        cq.select(em.getCriteriaBuilder().count(rt));
+//        Query query = em.createQuery(cq);
+//        rawParameters.stream().forEach((entry) -> {
+//            query.setParameter(entry.getKey(), entry.getValue());
+//        });
+//        return ((Long)query.getSingleResult()).intValue();
+//    }
+    
     /**
      * 根据给定的namedQuery返回记录结果.
      *

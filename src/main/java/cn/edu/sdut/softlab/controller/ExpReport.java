@@ -49,18 +49,18 @@ public class ExpReport {
     private String filePath;// 文件保存的路径
     private String answerText;// 代码(答案)
 
-    private ItemBank question;// 当前题目
+    private Question question;// 当前题目
 
     // 注入受管bean
     @SessionScoped
     @ManagedProperty(value = "#{login.currentUser}")
     private Student currentUser;// 当前用户
 
-    public ItemBank getQuestion() {
+    public Question getQuestion() {
         return question;
     }
 
-    public void setQuestion(ItemBank question) {
+    public void setQuestion(Question question) {
         this.question = question;
     }
 

@@ -8,7 +8,6 @@ package cn.edu.sdut.softlab.service;
 import cn.edu.sdut.softlab.entity.Admin;
 import java.util.HashMap;
 import java.util.Map;
-import javax.ejb.Stateless;
 import javax.inject.Named;
 
 /**
@@ -22,7 +21,7 @@ public class AdminFacade extends AbstractFacade<Admin>{
         super(Admin.class);
     }
     
-    public Admin findByStuId(Integer id) {
+    public Admin findByAdminId(Integer id) {
         Map<String, Object> parameters = new HashMap<>(0);
         parameters.put("id", id);
         return findSingleByNamedQuery("Admin.findById", parameters, Admin.class).get();

@@ -19,7 +19,7 @@ public class Achievement implements Serializable {
 
     @Id
     @SequenceGenerator(name = "ACHIEVEMENTS_ID_GENERATOR")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ACHIEVEMENTS_ID_GENERATOR")
+    @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "ACHIEVEMENTS_ID_GENERATOR")
     private int id;
 
     @Lob
@@ -32,10 +32,10 @@ public class Achievement implements Serializable {
 
     private int score;
 
-    //bi-directional many-to-one association to ItemBank
+    //bi-directional many-to-one association to Question
     @ManyToOne
     @JoinColumn(name = "question_id")
-    private ItemBank itemBank;
+    private Question itemBank;
 
     //bi-directional many-to-one association to Student
     @ManyToOne
@@ -84,11 +84,11 @@ public class Achievement implements Serializable {
         this.score = score;
     }
 
-    public ItemBank getItemBank() {
+    public Question getItemBank() {
         return this.itemBank;
     }
 
-    public void setItemBank(ItemBank itemBank) {
+    public void setItemBank(Question itemBank) {
         this.itemBank = itemBank;
     }
 

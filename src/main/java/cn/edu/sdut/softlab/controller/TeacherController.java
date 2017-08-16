@@ -7,6 +7,9 @@ package cn.edu.sdut.softlab.controller;
 
 import cn.edu.sdut.softlab.entity.Teacher;
 import cn.edu.sdut.softlab.entity.User;
+import cn.edu.sdut.softlab.qualifiers.AdminAudit;
+import cn.edu.sdut.softlab.qualifiers.Secure;
+import cn.edu.sdut.softlab.qualifiers.TeacherAudit;
 import cn.edu.sdut.softlab.service.TeacherFacade;
 import cn.edu.sdut.softlab.validator.StringIllegalValidator;
 import java.util.List;
@@ -93,6 +96,7 @@ public class TeacherController {
         }
     }
     
+    @AdminAudit
     public void onRowEdit(RowEditEvent event) throws Exception {
         Teacher editTeacher = (Teacher) event.getObject();
         currentTea.setId(editTeacher.getId());
@@ -115,7 +119,8 @@ public class TeacherController {
         FacesContext.getCurrentInstance().addMessage(null, msg);
         currentTea = null;
     }
-
+    
+    @AdminAudit
     public void add() throws Exception {
         if (!currentTea.getName().equals("")) {
             try {
@@ -129,7 +134,8 @@ public class TeacherController {
             facesContext.addMessage(null, new FacesMessage("添加失败!"));
         }
     }
-
+    
+    @AdminAudit
     public void delete() throws Exception {
         try {
             Teacher deleteTea = teacherService.findByTeaName(deletename);
@@ -145,17 +151,16 @@ public class TeacherController {
             logger.log(Level.INFO, "Teacher Delete Called:{0}", deleteTeacher.toString());
         }
     }
-
+    
     public void teaAddValidator(FacesContext fc, UIComponent component, Object value) {
         stringValidator.AddValidator(value);
         List<Teacher> teachers = teacherService.findAll();
-        for (Teacher i : teachers) {
-            if (((String) value).equals(i.getName())) {
-                throw new ValidatorException(new FacesMessage("您要添加的物品已有，请验证确定后再次添加！"));
-            }
-        }
+        teachers.stream().filter((i) -> (value.equals(i.getName()))).forEachOrdered((_item) -> {
+            throw new ValidatorException(new FacesMessage("您要添加的物品已有，请验证确定后再次添加！"));
+        });
     }
     
+    @TeacherAudit
     public String modifyMySelf(Teacher loginTeacher) throws Exception {
         logger.log(Level.INFO, "Student information modify:{0}", loginTeacher.toString());
         try {
