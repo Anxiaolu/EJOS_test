@@ -39,18 +39,23 @@ public class RecordController {
     @Inject
     UserTransaction utx;
     
+    /**
+     * 对照记录表中的未通过记录的时间和题目表的截止时间获取未完成题目的记录
+     * @return
+     * @throws Exception 
+     */
     public List<Record> getRecordsLessFour() throws Exception{
         try {
             utx.begin();
-            List<Record> curentrecords = recordService.findRecordsByStatus("未完成");
-            List<Record> allowRecords;
-            for (Record curentrecord : curentrecords) {
-//                if (dateUtil.getTwoDay(dateUtil.dateToStr(curentrecord.getTime(),
-//                        questionService.findQuestionsById(curentrecord.getQuestionId()).getDeadline())) {
-//                    
-//                }
+            List<Record> currentrecords = recordService.findRecordsByStatus("未完成");
+            List<Record> allowRecords = null;
+            for (Record currentrecord : currentrecords) {
+                if (dateUtil.getTwoDay(questionService.findQuestionsById(currentrecord.getQuestionId()).getDeadline()
+                        ,currentrecord.getTime())<=4) {
+                    allowRecords.add(currentrecord);
+                }
             }
-            return null;
+            return allowRecords;
         } finally{
             utx.commit();
         }

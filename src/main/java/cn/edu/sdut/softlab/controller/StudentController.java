@@ -152,6 +152,10 @@ public class StudentController {
         }
     }
     
+    /**
+     * 通过前台页添加学生
+     * @throws Exception 
+     */
     public void addSingleStudent()throws Exception{
         try {
             utx.begin();

@@ -36,40 +36,40 @@ import org.primefaces.event.RowEditEvent;
 @ManagedBean(name = "newsController")
 @ApplicationScoped
 public class NewsController {
-    
+
     @Inject
     Logger logger;
-    
+
     @Inject
     UserTransaction utx;
-    
+
     @Inject
     EntityManager em;
-    
+
     @Inject
     FacesContext facesContext;
-    
+
     @Inject
     DateUtil dateUtil;
-    
+
     @Inject
     TeamFacade teamService;
-    
+
     @Inject
     QuestionFacade questionService;
-    
+
     @Inject
     RecordFacade recordService;
-    
+
     @Inject
     NewsFacade newsService;
-    
+
     @Inject
     StudentFacade studentService;
-    
+
     @Inject
     LoginController loginController;
-    
+
     private News currentnews = new News();
 
     public News getCurrentnews() {
@@ -79,46 +79,56 @@ public class NewsController {
     public void setCurrentnews(News currentnews) {
         this.currentnews = currentnews;
     }
-    
-    public List<News> getAll() throws Exception{
+
+    public List<News> getAll() throws Exception {
         try {
             utx.begin();
             CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
             cq.select(cq.from(News.class));
             return em.createQuery(cq).getResultList();
-        } finally{
+        } finally {
             utx.commit();
         }
     }
-    
+
     /**
      * 根绝登录的用户身份,返回对应的消息数量
-     * @return 
+     *
+     * @return
      */
-    public Integer getNewsNum(){
-        if (loginController.getCurrentUser().getLevel().equals("Admin")) {
+    public Integer getNewsNum() {
+        if (loginController.getCurrentUser().getLevel().equals("Admin")
+            || loginController.getCurrentUser().getLevel().equals("Teacher")) {
             return 0;
         }
         Student loginStu = studentService.findStudentByName(loginController.getCurrentUser().getName());
         List<News> newss = newsService.getNewsByStuId(loginStu.getId());
         return newss.size();
     }
-    
+
     /**
      * 向前台返回消息列表
-     * @return 
+     *
+     * @return
      */
-    public List<News> getNewsByStu(){
-        if (loginController.getCurrentUser().getLevel().equals("Admin")) {
+    public List<News> getNewsByStu() {
+        if (loginController.getCurrentUser().getLevel().equals("Admin")
+            || loginController.getCurrentUser().getLevel().equals("Teacher")) {
             return null;
         }
         Student loginStu = studentService.findStudentByName(loginController.getCurrentUser().getName());
         return newsService.getNewsByStuId(loginStu.getId());
     }
     
+//    public List<News> getNewsByNewsTime(){
+//        List<News> currentList = null;
+//        List<News> newses = newsService.
+//    }
+
     /**
      * 根据Record记录中未通过的记录向对应学生发送消息
-     * @throws Exception 
+     *
+     * @throws Exception
      */
     public void addNewsByRecord() throws Exception {
         try {
@@ -134,18 +144,31 @@ public class NewsController {
                 currentNews.setStatus("未完成");
                 newsService.create(currentNews);
             }
-        }
-        finally{
+        } finally {
             utx.commit();
         }
     }
-    
+
+    /**
+     * 过滤查询记录表和消息表查询记录表中未通过的表和消息表中未做的题目
+     * @throws java.lang.Exception
+     */
+    public void addNewsByRecordAndNews() throws Exception {
+        try {
+            utx.begin();
+            
+        } finally {
+            
+        }
+    }
+
     /**
      * 添加题目是自动调用
+     *
      * @param currentQuestion
-     * @throws Exception 
+     * @throws Exception
      */
-    public void addNewsBynewQuestion(Question currentQuestion) throws Exception{
+    public void addNewsBynewQuestion(Question currentQuestion) throws Exception {
         try {
             utx.begin();
             News currentNews = new News();
@@ -159,13 +182,13 @@ public class NewsController {
                 currentNews.setStudent(stu);
                 logger.log(Level.INFO, "News Add Called: {0}", currentNews.toString());
                 em.persist(currentNews);
-                currentNews = null; 
+                currentNews = null;
             }
-        }finally{
+        } finally {
             utx.commit();
         }
     }
-    
+
     public void onRowEdit(RowEditEvent event) throws Exception {
         News editNews = (News) event.getObject();
         currentnews.setId(editNews.getId());
@@ -182,9 +205,9 @@ public class NewsController {
             event = null;
         }
     }
-    
+
     public void onRowCancel(RowEditEvent event) {
-        FacesMessage msg = new FacesMessage("Edit Cancelled", ((News)event.getObject()).getTitle());
+        FacesMessage msg = new FacesMessage("Edit Cancelled", ((News) event.getObject()).getTitle());
         FacesContext.getCurrentInstance().addMessage(null, msg);
         currentnews = null;
     }

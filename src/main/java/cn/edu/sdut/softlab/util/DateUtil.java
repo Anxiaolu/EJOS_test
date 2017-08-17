@@ -304,17 +304,26 @@ public class DateUtil {
 
     /**
      * 得到二个日期间的间隔天数
+     * @param sj1
+     * @param sj2
+     * @return 
      */
-    public String getTwoDay(String sj1, String sj2) {
+    public Integer getTwoDay(String sj1, String sj2) {
         long day = 0;
         try {
             java.util.Date date = formatter.parse(sj1);
             java.util.Date mydate = formatter.parse(sj2);
             day = (date.getTime() - mydate.getTime()) / (24 * 60 * 60 * 1000);
         } catch (Exception e) {
-            return "";
+            return 0;
         }
-        return day + "";
+        return (int)day;
+    }
+    
+    public Integer getTwoDay(Date sj1,Date sj2){
+        long day = 0;
+        day = (sj1.getTime() - sj2.getTime())/(60 * 60 * 24 * 1000);
+        return (int)day;
     }
 
     /**
